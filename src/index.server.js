@@ -20,6 +20,9 @@ mongoose.connect(
       console.log('Database connected');
 });
 
+
+app.use('./api',userRoutes);
+
 app.listen(process.env.PORT, ()=>{
       console.log(`Server is running on port ${process.env.PORT}`);
 });
