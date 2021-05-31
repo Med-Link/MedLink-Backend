@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 
 const UserSchema = new mongoose.Schema({
-      firstname:{
+      firstName:{
             type:String,
             required:true,
             trim:true,
@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
 
       },
 
-      lastname:{
+      lastName:{
             type:String,
             required:true,
             trim:true,
@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
 
       },
 
-      username:{
+      userName:{
             type:String,
             required:true,
             trim:true,
@@ -61,16 +61,23 @@ const UserSchema = new mongoose.Schema({
       }
 
 
-},{timestamps:true});
+},
+{timestamps:true}
+);
 
 UserSchema.virtual('password')
 .set(function(password){
-     this.hash_password=bcrypt.hashSync(password, 8);
+     this.hash_password=bcrypt.hashSync(password, 10);
+});
+
+UserSchema.virtual('fullName')
+.get(function(){
+     return `${this.firstName} ${this.lastName}`;
 });
 
 UserSchema.methods ={
       authenticate:function(){
-            return bcrypt.compare(password, this.hash_password);
+            return bcrypt.compareSync(password, this.hash_password);
       }
 }
 

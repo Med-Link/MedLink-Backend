@@ -6,12 +6,11 @@ const mongoose = require('mongoose');
 
 
 //routes
-const userRoutes = require('./routes/user');
+const authRoutes = require('./routes/auth');
 
 env.config();
 
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(bodyParser.json());
 
 //mongodb+srv://root:<password>@cluster0.icjfy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
@@ -38,7 +37,7 @@ app.post('/data',(req,res, next)=>{
       });
 });
 
-app.use('./api',userRoutes);
+app.use('./api', authRoutes);
 
 app.listen(process.env.PORT, ()=>{
       console.log(`Server is running on port ${process.env.PORT}`);
