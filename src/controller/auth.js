@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken')
 
 
 exports.signup = (req,res)=>{
-      User.findOne({email:req.body.email}).exec((error,User) => {
-            if(User) 
+      User.findOne({email:req.body.email}).exec((error,userdet) => {
+            if(userdet) 
             return res.status(400).json({
                   message:'User already registered'
             });
@@ -22,16 +22,16 @@ exports.signup = (req,res)=>{
                   lastName, 
                   email, 
                   password,
-                  username:Math.random().toString()
+                  userName:Math.random().toString()
             });
 
-            _user.save((error, User) => {
+            _user.save((error, userdet) => {
                   if(error){
                         return res.status(400).json({
-                              message: 'Something went wrong'
+                              message: error
                         });
                   }
-                  if(User){
+                  if(userdet){
                         return res.status(201).json({
                               message: "user created success"
                         })
