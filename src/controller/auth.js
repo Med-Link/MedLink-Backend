@@ -43,16 +43,16 @@ exports.signup = (req,res)=>{
 
 
 exports.signin = (req,res)=>{
-      User.findOne({email: req.body.email})
-      .exec((error,user) =>{
+      User.findOne({email: req.body.email}).exec((error,userdet) =>{
             if(error) return res.status(400).json({error});
-            if(user){
-                  if(user.authenticate(req.body.password)){
-                        const token = jwt.sign({_id: user._id},process.env.JWT_SECRET, {expiresIn: '6h'});
-                        const {firstName, lastName, email, role, fullName} =user
+            if(userdet){
+                  if(userdet.authenticate(req.body.password)){
+                        
+                        const token = jwt.sign({_id: userdet._id},process.env.JWT_SECRET, {expiresIn: '6h'});
+                        const {firstName, lastName, email, role, fullName} =userdet
                         res.status(200).json({
                               token,
-                              user:{
+                              userdet:{
                                     firstName, lastName, email, role, fullName 
                               }
                         });
