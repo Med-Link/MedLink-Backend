@@ -7,6 +7,9 @@ const mongoose = require('mongoose');
 
 //routes
 const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin/auth');
+const pharmacyRoutes = require('./routes/pharmacy/auth');
+
 
 env.config();
 
@@ -38,6 +41,10 @@ app.post('/data',(req,res, next)=>{
 });
 
 app.use('/api', authRoutes);
+app.use('/api', adminRoutes);
+app.use('/api', pharmacyRoutes);
+
+
 
 app.listen(process.env.PORT, ()=>{
       console.log(`Server is running on port ${process.env.PORT}`);
