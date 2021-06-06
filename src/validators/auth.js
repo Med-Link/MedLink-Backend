@@ -5,16 +5,16 @@ const {check, validationResult} = require('express-validator');
 exports.validateSignupRequest = [
       check('firstName')
       .notEmpty()
-      .withMessage('firstName is required'),
+      .withMessage('FirstName is required'),
       check('lastName')
       .notEmpty()
-      .withMessage('lastName is required'),
+      .withMessage('LastName is required'),
       check('email')
       .isEmail()
-      .withMessage('valid Email is required'),
+      .withMessage('Valid Email is required'),
       check('password')
       .isLength({min:6})
-      .withMessage('password must be atleast 6 characters long'),
+      .withMessage('Password must be atleast 6 characters long'),
       
 ];
 
@@ -22,10 +22,10 @@ exports.validateSigninRequest = [
      
       check('email')
       .isEmail()
-      .withMessage('valid Email is required'),
+      .withMessage('Email is required'),
       check('password')
       .isLength({min:6})
-      .withMessage('password must be atleast 6 characters long'),
+      .withMessage('Password must be atleast 6 characters long'),
       
 ];
 

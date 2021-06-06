@@ -12,8 +12,9 @@ const pharmacyRoutes = require('./routes/pharmacy/auth');
 
 
 env.config();
-
-app.use(bodyParser.urlencoded({ extended: true }));
+//already included in express package
+//can use express.json instead of body parser
+app.use(bodyParser.urlencoded({ extended: true })); 
 app.use(bodyParser.json());
 
 //mongodb+srv://root:<password>@cluster0.icjfy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
