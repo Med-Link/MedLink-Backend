@@ -36,7 +36,7 @@ exports.signin = (req, res) => {
   User.findOne({ email: req.body.email }).exec((error, userdet) => {
     if (error) return res.status(400).json({ error });
     if (userdet) {
-      if (userdet.authenticate(req.body.password) && user.role === "admin") {
+      if (userdet.authenticate(req.body.password) && userdet.role === "admin") {
         const token = jwt.sign({ _id: userdet._id }, process.env.JWT_SECRET, {
           expiresIn: "6h",
         });
