@@ -54,6 +54,10 @@ const UserSchema = new Schema({
 
       contactNumber:{
             type:String,
+            required:true,
+            trim:true,
+            // min:10,
+            // max:10,
       },
 
       profilepic:{

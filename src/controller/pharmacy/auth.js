@@ -7,12 +7,13 @@ exports.signup = (req, res) => {
       return res.status(400).json({
         message: "Pharmacy already registered",
       });
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, contactNumber, password } = req.body;
 
     const _user = new User({
       firstName,
       lastName,
       email,
+      contactNumber,
       password,
       userName: Math.random().toString(),
       role: "pharmacy",
@@ -40,7 +41,7 @@ exports.signin = (req, res) => {
         const token = jwt.sign({ _id: userdet._id }, process.env.JWT_SECRET, {
           expiresIn: "6h",
         });
-        const { _id, firstName, lastName, email, role, fullName } = userdet;
+        const { _id, firstName, lastName, email, contactNumber, role, fullName } = userdet;
         res.status(200).json({
           token,
           userdet: {
@@ -48,6 +49,7 @@ exports.signin = (req, res) => {
             firstName,
             lastName,
             email,
+            contactNumber,
             role,
             fullName,
           },
