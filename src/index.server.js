@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin/auth');
 const pharmacyRoutes = require('./routes/pharmacy/auth');
+const orderRoutes = require('./routes/order')
 
 
 env.config();
@@ -44,6 +45,8 @@ app.post('/data',(req,res, next)=>{
 app.use('/api', authRoutes);
 app.use('/api', adminRoutes);
 app.use('/api', pharmacyRoutes);
+app.use('/api', orderRoutes);
+
 
 
 
