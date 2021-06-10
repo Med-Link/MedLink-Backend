@@ -10,6 +10,8 @@ const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin/auth');
 const pharmacyRoutes = require('./routes/pharmacy/auth');
 const orderRoutes = require('./routes/order')
+const pharmacyorderRoutes = require('./routes/pharmacy/order')
+
 
 
 env.config();
@@ -46,6 +48,8 @@ app.use('/api', authRoutes);
 app.use('/api', adminRoutes);
 app.use('/api', pharmacyRoutes);
 app.use('/api', orderRoutes);
+app.use('/api', pharmacyorderRoutes);
+
 
 
 
