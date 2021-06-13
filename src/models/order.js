@@ -38,6 +38,8 @@ const OrderSchema = new Schema(
       // max:10,
     },
 
+    addedBy:{ type:mongoose.Schema.Types.ObjectId, ref:"User"   },
+
     prescriptionpic: {
       type: String,
     },

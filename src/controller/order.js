@@ -7,7 +7,8 @@ exports.addOrder = (req,res) => {
             description:req.body.description,
             amount:req.body.amount,
             address:req.body.address,
-            contactNumber:req.body.contactNumber
+            contactNumber:req.body.contactNumber,
+            addedBy:req.user._id
       }
 
       const ord = new Order(orderobj);

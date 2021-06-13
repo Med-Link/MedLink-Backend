@@ -38,7 +38,7 @@ exports.signin = (req, res) => {
     if (error) return res.status(400).json({ error });
     if (userdet) {
       if (userdet.authenticate(req.body.password)) {
-        const token = jwt.sign({ _id: userdet._id }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ _id: userdet._id, role: userdet.role }, process.env.JWT_SECRET, {
           expiresIn: "6h",
         });
         const { _id, firstName, lastName, email, contactNumber, role, fullName } = userdet;
