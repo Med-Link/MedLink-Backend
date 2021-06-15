@@ -11,7 +11,9 @@ const OrderSchema = new Schema(
       index: true,
       lowercase: true,
     },
-
+    prescription: {
+      type: String,
+    },
     amount: {
       type: String,
       required: true,
@@ -40,9 +42,7 @@ const OrderSchema = new Schema(
 
     addedBy:{ type:mongoose.Schema.Types.ObjectId, ref:"User"   },
 
-    prescriptionpic: {
-      type: String,
-    },
+    
   },
   { timestamps: true }
 );

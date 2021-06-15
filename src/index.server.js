@@ -9,8 +9,8 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin/auth');
 const pharmacyRoutes = require('./routes/pharmacy/auth');
-const orderRoutes = require('./routes/order')
-const pharmacyorderRoutes = require('./routes/pharmacy/order')
+const orderRoutes = require('./routes/order');
+const pharmacyorderRoutes = require('./routes/pharmacy/order');
 
 
 
