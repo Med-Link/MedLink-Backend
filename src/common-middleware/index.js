@@ -1,18 +1,17 @@
-const jwt = require('jsonwebtoken');
-const multer = require('multer');
-const multerS3 = require('multer-s3');
-const aws = require('aws-sdk');
-const shortid = require('shortid');
-require('dotenv').config();
+const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const multerS3 = require("multer-s3");
+const aws = require("aws-sdk");
+const shortid = require("shortid");
+require("dotenv").config();
 
-
-const accessKeyId=process.env.AWS_ACCESS_KEY
-const secretAccessKey=process.env.AWS_SECRET_KEY
-const bucketname=process.env.AWS_BUCKET_NAME
+const accessKeyId = process.env.AWS_ACCESS_KEY;
+const secretAccessKey = process.env.AWS_SECRET_KEY;
+const bucketname = process.env.AWS_BUCKET_NAME;
 
 const s3 = new aws.S3({
-  accessKeyId ,
-  secretAccessKey 
+  accessKeyId,
+  secretAccessKey,
 });
 
 exports.upload = multer();
@@ -20,23 +19,23 @@ exports.upload = multer();
 exports.uploadS3 = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'medlinkapp',
+    bucket: bucketname,
     // acl: 'public-read',
     metadata: function (req, file, cb) {
-      cb(null, {fieldName: file.fieldname});
+      cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
       cb(null, shortid.generate() + "-" + file.originalname);
-    }
-  })
-})
+    },
+  }),
+});
 
 exports.requireSignin = (req, res, next) => {
   if (req.headers.authorization) {
     const token = req.headers.authorization.split(" ")[1];
     const user = jwt.verify(token, process.env.JWT_SECRET);
     req.user = user;
-  }else{
+  } else {
     return res.status(400).json({ message: "Authorization required" });
   }
   next();
