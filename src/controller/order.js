@@ -2,16 +2,16 @@ const Order = require("../models/order");
 
 exports.addOrder = (req, res) => {
      
-  const { description, prescription, amount, address, contactNumber, addedBy } = req.body;
+  const { description, amount, address, contactNumber, addedBy } = req.body;
 
 
-//   let prescription = [];
-
-//   if (req.files.length > 0) {
-//     prescription = req.files.map((file) => {
-//       return { img: file.location };
-//     });
-//   }
+  // let prescription=req.file.map(file);
+const prescription = req.file.location;
+  // if (req.file.length > 0) {
+  //    req.files.map((file) => {
+  //     return { precription: file.location };
+  //   });
+  // }
 
   const order = new Order({
     description,
