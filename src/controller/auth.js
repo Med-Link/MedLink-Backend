@@ -7,11 +7,11 @@ exports.signup = (req, res) => {
       return res.status(400).json({
         message: "User already registered",
       });
-    const { firstName, lastName, email, contactNumber, password } = req.body;
+    const { firstName, email, contactNumber, password } = req.body;
 
     const _user = new User({
       firstName,
-      lastName,
+      
       email,
       contactNumber,
       password,

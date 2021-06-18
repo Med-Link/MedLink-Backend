@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+
+const { Schema } = mongoose;
 
 const OrderSchema = new Schema(
   {
@@ -43,11 +44,10 @@ const OrderSchema = new Schema(
       // max:10,
     },
 
-    addedBy:{ type:mongoose.Schema.Types.ObjectId, ref:"User"   },
+    addedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 
-    
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-module.exports = mongoose.model("Order", OrderSchema);
+module.exports = mongoose.model('Order', OrderSchema);
