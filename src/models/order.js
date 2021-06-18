@@ -11,7 +11,10 @@ const OrderSchema = new Schema(
       index: true,
       lowercase: true,
     },
-    prescription: {
+    prescriptionName: {
+      type: String,
+    },
+    prescriptionUrl: {
       type: String,
     },
     amount: {

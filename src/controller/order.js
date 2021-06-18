@@ -4,9 +4,11 @@ exports.addOrder = (req, res) => {
      
   const { description, amount, address, contactNumber, addedBy } = req.body;
 
+  const prescriptionUrl = req.file.location;
+  const prescriptionName = req.file.key;
+
 
   // let prescription=req.file.map(file);
-const prescription = req.file.location;
   // if (req.file.length > 0) {
   //    req.files.map((file) => {
   //     return { precription: file.location };
@@ -15,7 +17,8 @@ const prescription = req.file.location;
 
   const order = new Order({
     description,
-    prescription,
+    prescriptionName,
+    prescriptionUrl,
     amount,
     address,
     contactNumber,
