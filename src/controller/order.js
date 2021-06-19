@@ -1,12 +1,12 @@
-const Order = require("../models/order");
+const Order = require('../models/order');
 
 exports.addOrder = (req, res) => {
-     
-  const { description, amount, address, contactNumber, addedBy } = req.body;
+  const {
+    description, amount, address, contactNumber, addedBy,
+  } = req.body;
 
   const prescriptionUrl = req.file.location;
   const prescriptionName = req.file.key;
-
 
   // let prescription=req.file.map(file);
   // if (req.file.length > 0) {

@@ -14,7 +14,6 @@ const UserSchema = new Schema(
 
     lastName: {
       type: String,
-      required: true,
       trim: true,
       min: 3,
       max: 25,
@@ -54,6 +53,9 @@ const UserSchema = new Schema(
       // min:10,
       // max:10,
     },
+    // registrationDocs:{
+    //   type: String,
+    // },
 
     profilepic: {
       type: String,
