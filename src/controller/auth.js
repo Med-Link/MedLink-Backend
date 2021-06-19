@@ -16,6 +16,7 @@ exports.signup = (req, res) => {
       firstName,
       email,
       contactNumber,
+      activeStatus:1,
       password,
       userName: Math.random().toString(),
     });

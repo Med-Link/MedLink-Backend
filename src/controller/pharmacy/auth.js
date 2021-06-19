@@ -27,6 +27,7 @@ console.log(registrationDocs);
       lastName,
       email,
       contactNumber,
+      activeStatus: 0,
       registrationDocs,
       password,
       userName: Math.random().toString(),

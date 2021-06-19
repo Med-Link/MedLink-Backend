@@ -45,7 +45,7 @@ const UserSchema = new Schema(
       enum: ['user', 'admin', 'pharmacy'],
       default: 'user',
     },
-
+    
     contactNumber: {
       type: String,
       required: true,
@@ -53,6 +53,11 @@ const UserSchema = new Schema(
       // min:10,
       // max:10,
     },
+    activeStatus: {
+      type: Boolean,
+      // required: true,
+    },
+
     registrationDocs: [
       { img: { type: String } },
     ],
