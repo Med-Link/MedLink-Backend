@@ -8,6 +8,8 @@ require('dotenv').config();
 const accessKeyId = process.env.AWS_ACCESS_KEY;
 const secretAccessKey = process.env.AWS_SECRET_KEY;
 const bucketname = process.env.AWS_BUCKET_NAME;
+const bucketname1 = process.env.AWS_BUCKET_NAME1;
+
 
 const s3 = new aws.S3({
   accessKeyId,
@@ -20,6 +22,20 @@ exports.uploadS3 = multer({
   storage: multerS3({
     s3,
     bucket: bucketname,
+    // acl: 'public-read',
+    metadata(req, file, cb) {
+      cb(null, { fieldName: file.fieldname });
+    },
+    key(req, file, cb) {
+      cb(null, `${shortid.generate()}-${file.originalname}`);
+    },
+  }),
+});
+
+exports.uploadpS3 = multer({
+  storage: multerS3({
+    s3,
+    bucket: bucketname1,
     // acl: 'public-read',
     metadata(req, file, cb) {
       cb(null, { fieldName: file.fieldname });

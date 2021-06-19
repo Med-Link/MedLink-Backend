@@ -53,10 +53,9 @@ const UserSchema = new Schema(
       // min:10,
       // max:10,
     },
-    // registrationDocs:{
-    //   type: String,
-    // },
-
+    registrationDocs: [
+      { img: { type: String } },
+    ],
     profilepic: {
       type: String,
     },

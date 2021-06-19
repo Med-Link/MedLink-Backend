@@ -12,12 +12,22 @@ exports.signup = (req, res) => {
       firstName, lastName, email, contactNumber, password,
     } = req.body;
 
+    var registrationDocs = [];
+
+    if (req.files.length > 0) {
+      registrationDocs = req.files.map((file) => {
+        return { img: file.location };
+      });
+    }
+console.log(registrationDocs);
+
     // eslint-disable-next-line no-underscore-dangle
     const _user = new User({
       firstName,
       lastName,
       email,
       contactNumber,
+      registrationDocs,
       password,
       userName: Math.random().toString(),
       role: 'pharmacy',
