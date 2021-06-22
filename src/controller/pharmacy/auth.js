@@ -16,10 +16,10 @@ exports.signup = (req, res) => {
 
     if (req.files.length > 0) {
       registrationDocs = req.files.map((file) => {
-        return { img: file.location };
+        return { img:file.location };
       });
     }
-console.log(registrationDocs);
+// console.log(registrationDocs);
 
     // eslint-disable-next-line no-underscore-dangle
     const _user = new User({

@@ -5,20 +5,21 @@ exports.addOrder = (req, res) => {
     description, amount, address, contactNumber, addedBy,
   } = req.body;
 
-  const prescriptionUrl = req.file.location;
-  const prescriptionName = req.file.key;
 
-  // let prescription=req.file.map(file);
-  // if (req.file.length > 0) {
-  //    req.files.map((file) => {
-  //     return { precription: file.location };
-  //   });
-  // }
+
+  var prescriptionPics = [];
+
+  if (req.files.length > 0) {
+    prescriptionPics = req.files.map((file) => {
+      return { img: file.location };
+    });
+  }
+console.log(prescriptionPics);
+
 
   const order = new Order({
     description,
-    prescriptionName,
-    prescriptionUrl,
+    prescriptionPics,
     amount,
     address,
     contactNumber,

@@ -12,12 +12,9 @@ const OrderSchema = new Schema(
       index: true,
       lowercase: true,
     },
-    prescriptionName: {
-      type: String,
-    },
-    prescriptionUrl: {
-      type: String,
-    },
+    prescriptionPics: [
+      { img: { type: String } },
+    ],
     amount: {
       type: String,
       required: true,
