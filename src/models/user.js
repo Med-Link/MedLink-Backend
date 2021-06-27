@@ -1,86 +1,34 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+// const pool = require('../db');
 
-const { Schema } = mongoose;
-const UserSchema = new Schema(
-  {
-    firstName: {
-      type: String,
-      required: true,
-      trim: true,
-      min: 3,
-      max: 25,
-    },
+// const findOne = await pool.query("SELECT * FROM users WHERE user_email = $1", [
+//   email
+// ]);
 
-    lastName: {
-      type: String,
-      trim: true,
-      min: 3,
-      max: 25,
-    },
 
-    userName: {
-      type: String,
-      required: true,
-      trim: true,
-      unique: true,
-      index: true,
-      lowercase: true,
-    },
 
-    email: {
-      type: String,
-      required: true,
-      trim: true,
-      unique: true,
-      lowercase: true,
-    },
-    hash_password: {
-      type: String,
-      required: true,
-    },
 
-    role: {
-      type: String,
-      enum: ['user', 'admin', 'pharmacy'],
-      default: 'user',
-    },
-    
-    contactNumber: {
-      type: String,
-      required: true,
-      trim: true,
-      // min:10,
-      // max:10,
-    },
-    activeStatus: {
-      type: Boolean,
-      // required: true,
-    },
 
-    registrationDocs: [
-      { img: { type: String } },
-    ],
-    profilepic: {
-      type: String,
-    },
-  },
-  { timestamps: true },
-);
 
-UserSchema.virtual('password').set(function (password) {
-  this.hash_password = bcrypt.hashSync(password, 10);
-});
+// const mongoose = require('mongoose');
+// const bcrypt = require('bcrypt');
 
-UserSchema.virtual('fullName').get(function () {
-  return `${this.firstName} ${this.lastName}`;
-});
+// const { Schema } = mongoose;
+// const UserSchema = new Schema(
 
-UserSchema.methods = {
-  authenticate(password) {
-    return bcrypt.compareSync(password, this.hash_password);
-  },
-};
 
-UserSchema.virtual('password');
-module.exports = mongoose.model('User', UserSchema);
+// UserSchema.virtual('password').set(function (password) {
+//   this.hash_password = bcrypt.hashSync(password, 10);
+// });
+
+// UserSchema.virtual('fullName').get(function () {
+//   return `${this.firstName} ${this.lastName}`;
+// });
+
+// UserSchema.methods = {
+//   authenticate(password) {
+//     return bcrypt.compareSync(password, this.hash_password);
+//   },
+// };
+
+// UserSchema.virtual('password');
+// module.exports = mongoose.model('User', UserSchema);

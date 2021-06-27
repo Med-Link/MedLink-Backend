@@ -10,9 +10,9 @@ exports.validateSignupRequest = [
   check('email')
     .isEmail()
     .withMessage('Valid Email is required'),
-  check('contactNumber')
-    .isLength({ min: 10, max: 10 })
-    .withMessage('Valid Contact number is required'),
+  // check('contactNumber')
+  //   .isLength({ min: 10, max: 10 })
+  //   .withMessage('Valid Contact number is required'),
   check('password')
     .isLength({ min: 6 })
     .withMessage('Password must be atleast 6 characters long'),
