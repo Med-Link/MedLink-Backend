@@ -7,7 +7,7 @@ const pool = require('../../db/db');
 exports.signup = async (req, res) => {
   // User.findOne({ email: req.body.email }).exec((error, userdet) => {
   const {
-    email, Name, contactNumber, password,
+    email, name, contactNumber, password,
   } = req.body;
 
   try {
@@ -16,7 +16,7 @@ exports.signup = async (req, res) => {
     ]);
 
     if (user.rows.length > 0) {
-      return res.status(401).json('User already exist!');
+      return res.status(401).json('pharmacy already exist!');
     }
 
     // const salt = bcrypt.genSalt(10);
@@ -24,14 +24,14 @@ exports.signup = async (req, res) => {
     const activeStatus = 0;
 
     const newUser = await pool.query(
-      'INSERT INTO public.customers ( email, name, contactnumber, lactivestatus, password) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [email, Name, contactNumber, activeStatus, bcryptPassword],
+      'INSERT INTO public.pharmacy ( email, name, contactnumber, activestatus, password) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [email, name, contactNumber, activeStatus, bcryptPassword],
     );
 
     // const jwtToken = jwtGenerator(newUser.rows[0].user_id);
     if (newUser) {
       return res.status(201).json({
-        message: 'user created success',
+        message: 'pharmacy created success',
       });
     }
   } catch (err) {

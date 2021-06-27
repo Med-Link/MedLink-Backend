@@ -1,42 +1,81 @@
-const jwt = require('jsonwebtoken');
-const User = require('../../models/user');
+// const jwt = require('jsonwebtoken');
+// const User = require('../../models/user');
 
-exports.signup = (req, res) => {
-  User.findOne({ email: req.body.email }).exec((error, userdet) => {
-    if (userdet) {
-      return res.status(400).json({
-        message: 'Admin already registered',
+// exports.signup = (req, res) => {
+//   User.findOne({ email: req.body.email }).exec((error, userdet) => {
+//     if (userdet) {
+//       return res.status(400).json({
+//         message: 'Admin already registered',
+//       });
+//     }
+//     const {
+//       firstName, lastName, email, contactNumber, password,
+//     } = req.body;
+
+//     const _user = new User({
+//       firstName,
+//       lastName,
+//       email,
+//       contactNumber,
+//       activeStatus: 1,
+//       password,
+//       userName: Math.random().toString(),
+//       role: 'admin',
+//     });
+//     _user.save((error, userdet) => {
+//       if (error) {
+//         return res.status(400).json({
+//           message: error,
+//         });
+//       }
+//       if (userdet) {
+//         return res.status(201).json({
+//           message: 'Admin created success',
+//         });
+//       }
+//     });
+//   });
+// };
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+// const jwtGenerator = require('../utils/jwtGenerator');
+const User = require('../../models/user');
+const pool = require('../../db/db');
+
+exports.signup = async (req, res) => {
+  // User.findOne({ email: req.body.email }).exec((error, userdet) => {
+  const {
+    email, firstName, lastName, password,
+  } = req.body;
+
+  try {
+    const user = await pool.query('SELECT * FROM public.admin WHERE email = $1', [
+      email,
+    ]);
+
+    if (user.rows.length > 0) {
+      return res.status(401).json('admin already exist!');
+    }
+
+    // const salt = bcrypt.genSalt(10);
+    const bcryptPassword = await bcrypt.hashSync(password, 10);
+
+    const newUser = await pool.query(
+      'INSERT INTO public.admin ( email, firstname, lastname,  password) VALUES ($1, $2, $3, $4) RETURNING *',
+      [email, firstName, lastName, bcryptPassword],
+    );
+
+    // const jwtToken = jwtGenerator(newUser.rows[0].user_id);
+    if (newUser) {
+      return res.status(201).json({
+        message: 'admin created success',
       });
     }
-    const {
-      firstName, lastName, email, contactNumber, password,
-    } = req.body;
-
-    const _user = new User({
-      firstName,
-      lastName,
-      email,
-      contactNumber,
-      activeStatus: 1,
-      password,
-      userName: Math.random().toString(),
-      role: 'admin',
-    });
-    _user.save((error, userdet) => {
-      if (error) {
-        return res.status(400).json({
-          message: error,
-        });
-      }
-      if (userdet) {
-        return res.status(201).json({
-          message: 'Admin created success',
-        });
-      }
-    });
-  });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
 };
-
 exports.signin = (req, res) => {
   User.findOne({ email: req.body.email }).exec((error, userdet) => {
     if (error) return res.status(400).json({ error });

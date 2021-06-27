@@ -3,7 +3,7 @@ const env = require('dotenv');
 
 const app = express();
 const bodyParser = require('body-parser');
-const pool= require('./db');
+const pool= require('./db/db');
 // const mongoose = require('mongoose');
 
 // routes
