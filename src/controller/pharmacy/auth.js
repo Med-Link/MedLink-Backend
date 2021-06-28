@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+const { LexRuntime } = require('aws-sdk');
 const User = require('../../models/user');
 const pool = require('../../db/db');
 
@@ -18,16 +19,22 @@ exports.signup = async (req, res) => {
     if (user.rows.length > 0) {
       return res.status(401).json('pharmacy already exist!');
     }
+    let regDocs = [];
+
+    if (req.files.length > 0) {
+      regDocs = req.files.map((file) => ({ img: file.location }));
+    }
 
     // const salt = bcrypt.genSalt(10);
     const bcryptPassword = await bcrypt.hashSync(password, 10);
     const activeStatus = 0;
+    let names = [];
+    names = regDocs.map((item) => item.img);
 
     const newUser = await pool.query(
-      'INSERT INTO public.pharmacy ( email, name, contactnumber, activestatus, password) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [email, name, contactNumber, activeStatus, bcryptPassword],
+      'INSERT INTO public.pharmacy ( email, name, contactnumber, activestatus, document1, document2, document3, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+      [email, name, contactNumber, activeStatus, names[0], names[1], names[2], bcryptPassword],
     );
-
     // const jwtToken = jwtGenerator(newUser.rows[0].user_id);
     if (newUser) {
       return res.status(201).json({
@@ -40,18 +47,13 @@ exports.signup = async (req, res) => {
   }
 };
 
-
-
-
-
-
 // exports.signup = (req, res) => {
 //   User.findOne({ email: req.body.email }).exec((error, userdet) => {
 //     if (userdet) {
 //       return res.status(400).json({
 //         message: 'Pharmacy already registered',
 //       });
-//     }  
+//     }
 //     const {
 //       firstName, lastName, email, contactNumber, password,
 //     } = req.body;
