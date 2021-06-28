@@ -73,36 +73,70 @@ exports.signup = async (req, res) => {
 //   });
 // });
 
-exports.signin = (req, res) => {
-  User.findOne({ email: req.body.email }).exec((error, userdet) => {
-    if (error) return res.status(400).json({ error });
-    if (userdet) {
-      if (userdet.authenticate(req.body.password)) {
-        const token = jwt.sign({ _id: userdet._id, role: userdet.role }, process.env.JWT_SECRET, {
-          expiresIn: '6h',
-        });
-        const {
-          _id, firstName, lastName, email, contactNumber, role, fullName,
-        } = userdet;
-        res.status(200).json({
-          token,
-          userdet: {
-            _id,
-            firstName,
-            lastName,
-            email,
-            contactNumber,
-            role,
-            fullName,
-          },
-        });
-      } else {
-        return res.status(400).json({
-          message: 'invalid password',
-        });
-      }
-    } else {
-      return res.status(400).json({ message: 'something went wrong' });
+exports.signin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await pool.query('SELECT * FROM customers WHERE email = $1', [
+      email,
+    ]);
+    // const role = customer;
+    if (user.rows.length === 0) {
+      return res.status(401).json('Invalid Credential');
     }
-  });
+
+    const validPassword = await bcrypt.compare(
+      password,
+      user.rows[0].password,
+    );
+
+    if (!validPassword) {
+      return res.status(401).json('Invalid Credential');
+    }
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: '6h',
+    });
+    return res.json({
+      token,
+      user,
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
 };
+
+// exports.signin = (req, res) => {
+//   User.findOne({ email: req.body.email }).exec((error, userdet) => {
+//     if (error) return res.status(400).json({ error });
+//     if (userdet) {
+//       if (userdet.authenticate(req.body.password)) {
+// eslint-disable-next-line max-len
+//         const token = jwt.sign({ _id: userdet._id, role: userdet.role }, process.env.JWT_SECRET, {
+//           expiresIn: '6h',
+//         });
+//         const {
+//           _id, firstName, lastName, email, contactNumber, role, fullName,
+//         } = userdet;
+//         res.status(200).json({
+//           token,
+//           userdet: {
+//             _id,
+//             firstName,
+//             lastName,
+//             email,
+//             contactNumber,
+//             role,
+//             fullName,
+//           },
+//         });
+//       } else {
+//         return res.status(400).json({
+//           message: 'invalid password',
+//         });
+//       }
+//     } else {
+//       return res.status(400).json({ message: 'something went wrong' });
+//     }
+//   });
+// };
