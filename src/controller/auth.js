@@ -93,9 +93,10 @@ exports.signin = async (req, res) => {
     if (!validPassword) {
       return res.status(401).json('Invalid Credential');
     }
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: '6h',
-    });
+    // const idd = user.rows[0].customerid;
+    // console.log(user.rows[0].customerid);
+    const payload = { id: user.rows[0].customerid };
+    const token = jwt.sign({ payload }, process.env.JWT_SECRET, { noTimestamp: true, expiresIn: '6h' });
     return res.json({
       token,
       user,

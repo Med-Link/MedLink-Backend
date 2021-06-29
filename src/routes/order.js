@@ -4,7 +4,9 @@ const { requireSignin, userMiddleware, uploadS3 } = require('../common-middlewar
 
 const router = express.Router();
 
-router.post('/order/create', requireSignin, userMiddleware, uploadS3.array('prescription'), addOrder);
+// router.post('/order/create', requireSignin, userMiddleware, uploadS3.array('prescription'), addOrder);
+router.post('/order/create', requireSignin, addOrder);
+
 router.get('/order/getOrder', getOrders);
 
 module.exports = router;
