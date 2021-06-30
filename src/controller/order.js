@@ -13,11 +13,14 @@ exports.addOrder = async (req, res) => {
   // var userId = decoded.id
   let orderPics = [];
 
-    if (req.files.length > 0) {
-      orderPics = req.files.map((file) => ({ img: file.location }));
-    }
-    let names = [];
-    names = orderPics.map((item) => item.img);
+  if (req.files.length > 0) {
+    orderPics = req.files.map((file) => ({ img: file.location }));
+  }
+  let names = [];
+  names = orderPics.map((item) => item.img);
+
+  // const obj = JSON.parse(names);
+  // console.log(obj);
 
   const token = req.headers.authorization.split(' ')[1];
 
@@ -29,7 +32,7 @@ exports.addOrder = async (req, res) => {
   try {
     const newOrder = await pool.query(
       'INSERT INTO public.order_req (description, prescription, customerid, pharmacyid ) VALUES ($1, $2, $3, $4) RETURNING *',
-      [description, names[0], customerid, pharmacyid],
+      [description, names, customerid, pharmacyid],
     );
 
     if (newOrder) {
