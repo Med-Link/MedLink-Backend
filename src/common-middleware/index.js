@@ -59,21 +59,36 @@ exports.requireSignin = (req, res, next) => {
   // jwt.decode()
 };
 exports.adminMiddleware = (req, res, next) => {
-  if (req.user.role !== 'admin') {
+  const token = req.headers.authorization.split(' ')[1];
+
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const userrole = decoded.payload.role;
+  // console.log(customerrole);
+  if (userrole !== 'admin') {
     return res.status(400).json({ message: 'Access Denied' });
   }
   next();
 };
 
-exports.userMiddleware = (req, res, next) => {
-  if (req.user.role !== 'user') {
+exports.customerMiddleware = (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const customerrole = decoded.payload.role;
+  // console.log(customerrole);
+  if (customerrole !== 'customer') {
     return res.status(400).json({ message: 'Access Denied' });
   }
   next();
 };
 
 exports.pharmacyMiddleware = (req, res, next) => {
-  if (req.user.role !== 'pharmacy') {
+  const token = req.headers.authorization.split(' ')[1];
+
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const userrole = decoded.payload.role;
+  // console.log(customerrole);
+  if (userrole !== 'pharmacy') {
     return res.status(400).json({ message: 'Access Denied' });
   }
   next();

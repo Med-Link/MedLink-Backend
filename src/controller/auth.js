@@ -95,7 +95,7 @@ exports.signin = async (req, res) => {
     }
     // const idd = user.rows[0].customerid;
     // console.log(user.rows[0].customerid);
-    const payload = { id: user.rows[0].customerid };
+    const payload = { id: user.rows[0].customerid, role: 'customer' };
     const token = jwt.sign({ payload }, process.env.JWT_SECRET, { noTimestamp: true, expiresIn: '6h' });
     return res.json({
       token,

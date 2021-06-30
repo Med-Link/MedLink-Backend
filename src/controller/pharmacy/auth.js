@@ -115,7 +115,7 @@ exports.signin = async (req, res) => {
     if (!validPassword) {
       return res.status(401).json('Invalid Credential');
     }
-    const payload = { id: user.rows[0].pharmacyid };
+    const payload = { id: user.rows[0].pharmacyid, role: 'pharmacy' };
     const token = jwt.sign({ payload }, process.env.JWT_SECRET, { noTimestamp: true, expiresIn: '6h' });
     return res.json({
       token,

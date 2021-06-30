@@ -11,17 +11,25 @@ exports.addOrder = async (req, res) => {
 
   //   const decoded = jwt.verify(token, config.get('jwtPrivateKey'));
   // var userId = decoded.id
+  let orderPics = [];
+
+    if (req.files.length > 0) {
+      orderPics = req.files.map((file) => ({ img: file.location }));
+    }
+    let names = [];
+    names = orderPics.map((item) => item.img);
+
   const token = req.headers.authorization.split(' ')[1];
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
   const customerid = decoded.payload.id;
   // var decoded = jwt_decode(token);
-  console.log(customerid);
+  // console.log(customerid);
 
   try {
     const newOrder = await pool.query(
       'INSERT INTO public.order_req (description, prescription, customerid, pharmacyid ) VALUES ($1, $2, $3, $4) RETURNING *',
-      [description, prescription, customerid, pharmacyid],
+      [description, names[0], customerid, pharmacyid],
     );
 
     if (newOrder) {

@@ -97,7 +97,7 @@ exports.signin = async (req, res) => {
     if (!validPassword) {
       return res.status(401).json('Invalid Credential');
     }
-    const payload = { id: user.rows[0].adminid };
+    const payload = { id: user.rows[0].adminid, role: 'admin' };
     const token = jwt.sign({ payload }, process.env.JWT_SECRET, { noTimestamp: true, expiresIn: '6h' });
     return res.json({
       token,
@@ -113,7 +113,6 @@ exports.signin = async (req, res) => {
 //   User.findOne({ email: req.body.email }).exec((error, userdet) => {
 //     if (error) return res.status(400).json({ error });
 //     if (userde
-
 
 // exports.signin = (req, res) => {
 //   User.findOne({ email: req.body.email }).exec((error, userdet) => {
