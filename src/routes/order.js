@@ -1,5 +1,5 @@
 const express = require('express');
-const { addOrder, getOrders } = require('../controller/order');
+const { addOrder, getOrder_reqs, getOrder_req } = require('../controller/order');
 const { requireSignin, customerMiddleware, uploadS3 } = require('../common-middleware');
 
 const router = express.Router();
@@ -7,6 +7,8 @@ const router = express.Router();
 // router.post('/order/create', requireSignin, userMiddleware, uploadS3.array('prescription'), addOrder);
 router.post('/order/create', requireSignin, customerMiddleware, uploadS3.array('prescription'), addOrder);
 
-router.get('/order/getOrder', getOrders);
+router.get('/order/getOrder_reqs', getOrder_reqs);
+router.post('/order/getOrder_req', getOrder_req);
+
 
 module.exports = router;
