@@ -3,7 +3,7 @@ const env = require('dotenv');
 
 const app = express();
 const bodyParser = require('body-parser');
-const pool= require('./db/db');
+// const pool= require('./db/db');
 // const mongoose = require('mongoose');
 
 // routes
@@ -33,13 +33,13 @@ app.use(bodyParser.json());
 //     console.log('Database connected');
 //   });
 
-app.get('/', (req, res, next) => {
+app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Hello from Server',
   });
 });
 
-app.post('/data', (req, res, next) => {
+app.post('/data', (req, res) => {
   res.status(200).json({
     message: req.body,
   });

@@ -1,5 +1,5 @@
 const express = require('express');
-const { uploadS3, uploadpS3 } = require('../../common-middleware');
+const { uploadpS3 } = require('../../common-middleware');
 
 const router = express.Router();
 const { signup, signin } = require('../../controller/pharmacy/auth');

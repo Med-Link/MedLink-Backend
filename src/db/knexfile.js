@@ -6,16 +6,16 @@ module.exports = {
     client: 'postgresql',
     connection: {
       database: 'medlink',
-      user:     'postgres',
-      password: 'abcd1234'
+      user: 'postgres',
+      password: 'abcd1234',
     },
     pool: {
       min: 2,
-      max: 10
+      max: 10,
     },
     migrations: {
-      tableName: 'knex_migrations'
-    }
+      tableName: 'knex_migrations',
+    },
   },
 
   // production: {

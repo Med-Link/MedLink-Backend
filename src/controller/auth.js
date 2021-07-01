@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 // const jwtGenerator = require('../utils/jwtGenerator');
-const User = require('../models/user');
+// const User = require('../models/user');
 const pool = require('../db/db');
 
+// eslint-disable-next-line consistent-return
 exports.signup = async (req, res) => {
   // User.findOne({ email: req.body.email }).exec((error, userdet) => {
   const {
@@ -73,6 +74,7 @@ exports.signup = async (req, res) => {
 //   });
 // });
 
+// eslint-disable-next-line consistent-return
 exports.signin = async (req, res) => {
   const { email, password } = req.body;
 

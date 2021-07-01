@@ -10,7 +10,6 @@ const secretAccessKey = process.env.AWS_SECRET_KEY;
 const bucketname = process.env.AWS_BUCKET_NAME;
 const bucketname1 = process.env.AWS_BUCKET_NAME1;
 
-
 const s3 = new aws.S3({
   accessKeyId,
   secretAccessKey,
@@ -46,6 +45,7 @@ exports.uploadpS3 = multer({
   }),
 });
 
+// eslint-disable-next-line consistent-return
 exports.requireSignin = (req, res, next) => {
   if (req.headers.authorization) {
     const token = req.headers.authorization.split(' ')[1];
@@ -58,6 +58,7 @@ exports.requireSignin = (req, res, next) => {
 
   // jwt.decode()
 };
+// eslint-disable-next-line consistent-return
 exports.adminMiddleware = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
 
@@ -70,6 +71,7 @@ exports.adminMiddleware = (req, res, next) => {
   next();
 };
 
+// eslint-disable-next-line consistent-return
 exports.customerMiddleware = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
 
@@ -82,6 +84,7 @@ exports.customerMiddleware = (req, res, next) => {
   next();
 };
 
+// eslint-disable-next-line consistent-return
 exports.pharmacyMiddleware = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
 

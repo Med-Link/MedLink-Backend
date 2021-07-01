@@ -4,9 +4,10 @@ const jwt = require('jsonwebtoken');
 
 const pool = require('../db/db');
 
+// eslint-disable-next-line consistent-return
 exports.addOrder = async (req, res) => {
   const {
-    description, prescription, pharmacyid,
+    description, pharmacyid,
   } = req.body;
 
   //   const decoded = jwt.verify(token, config.get('jwtPrivateKey'));
@@ -84,6 +85,7 @@ exports.addOrder = async (req, res) => {
 //   });
 // };
 
+// eslint-disable-next-line consistent-return
 exports.getOrder_reqs = async (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
 
@@ -115,6 +117,7 @@ exports.getOrder_reqs = async (req, res) => {
   }
 };
 
+// eslint-disable-next-line consistent-return
 exports.getOrder_req = async (req, res) => {
   const {
     orderid,

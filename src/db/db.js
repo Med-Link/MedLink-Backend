@@ -1,5 +1,5 @@
-const knex = require('knex');
-const knexfile = require('./knexfile');
+// const knex = require('knex');
+// const knexfile = require('./knexfile');
 
 const { Pool } = require('pg');
 
