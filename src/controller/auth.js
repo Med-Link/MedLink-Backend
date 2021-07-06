@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 // const jwtGenerator = require('../utils/jwtGenerator');
 // const User = require('../models/user');
+const nodemailer = require('nodemailer');
+const sendMail = require('nodemailer/lib/mailer');
 const pool = require('../db/db');
 
 // eslint-disable-next-line consistent-return
@@ -75,33 +77,46 @@ exports.signin = async (req, res) => {
 exports.forgotpassword = async (req, res) => {
   const { email } = req.body;
 
-  try {
-    const user = await pool.query('SELECT customerid FROM public.customers WHERE email = $1', [
-      email,
-    ]);
-    if (user.rows.length === 0) {
-      return res.status(401).json('User from this email does not exist');
-    }
-    const payload = { id: user.rows[0].customerid };
-    // console.log(user.rows[0].customerid);
-    const token = jwt.sign({ payload }, process.env.PASSWORD_RESET, { noTimestamp: true, expiresIn: '20m' });
-    if (token) {
-      return res.status(201).json({
-        message: 'Reset link sent', token,
-      });
-    }
-    return token;
-    // const data = {
-    //   from: 'noreply@medlink.com',
-    //   to: user.email,
-    //   subject: 'Account Activation Link',
-    //   html:  <h2>Please click on link to reset your password</h2>
-    //       <p>${process.env.PASSWORD_RESET}/resetpassword/${token}</p>
-    // };
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+  const user = await pool.query('SELECT customerid FROM public.customers WHERE email = $1', [
+    email,
+  ]);
+  if (user.rows.length === 0) {
+    return res.status(401).json('User from this email does not exist');
   }
+  const payload = { id: user.rows[0].customerid };
+  // console.log(user.rows[0].customerid);
+  const token = jwt.sign({ payload }, process.env.PASSWORD_RESET, { noTimestamp: true, expiresIn: '20m' });
+  // if (token) {
+  //   return res.status(201).json({
+  //     message: 'Reset link sent', token,
+  //   });
+  // }
+  // return token;
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'medlinkapp.info@gmail.com',
+      pass: 'Medlink123',
+    },
+  });
+
+  const mailOptions = {
+    from: 'medlinkapp.info@gmail.com',
+    to: 'akiladesilva97@gmail.com',
+    subject: 'MedLink Account password Reset Link',
+    text: 'Click the link below to login to your MedLink account',
+    html: `
+    <h2>Click the link below to login to your MedLink account</h2>
+    <p> ${process.env.CLIENT_URL}/resetpassword/${token} </p>`,
+  };
+
+  const sent = transporter.sendMail(mailOptions, (error, info) => {
+    if (sent) {
+      return res.status(401).json(error);
+    }
+    return res.status(201).json(`Email sent: ${info.response}`);
+  });
 };
 
 exports.resetpassword = async (req, res) => {
@@ -131,43 +146,4 @@ exports.resetpassword = async (req, res) => {
     return res.status(401).json({ error: 'Error in reseting password' });
   }
   return res.status(401).json({ error: 'Reset link expired' });
-
-  //  else {
-  //   return res.status(401).json('Authentication error');
-  // }
 };
-
-// exports.signin = (req, res) => {
-//   User.findOne({ email: req.body.email }).exec((error, userdet) => {
-//     if (error) return res.status(400).json({ error });
-//     if (userdet) {
-//       if (userdet.authenticate(req.body.password)) {
-// eslint-disable-next-line max-len
-//         const token = jwt.sign({ _id: userdet._id, role: userdet.role }, process.env.JWT_SECRET, {
-//           expiresIn: '6h',
-//         });
-//         const {
-//           _id, firstName, lastName, email, contactNumber, role, fullName,
-//         } = userdet;
-//         res.status(200).json({
-//           token,
-//           userdet: {
-//             _id,
-//             firstName,
-//             lastName,
-//             email,
-//             contactNumber,
-//             role,
-//             fullName,
-//           },
-//         });
-//       } else {
-//         return res.status(400).json({
-//           message: 'invalid password',
-//         });
-//       }
-//     } else {
-//       return res.status(400).json({ message: 'something went wrong' });
-//     }
-//   });
-// };
