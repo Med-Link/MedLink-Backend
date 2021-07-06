@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 // const jwtGenerator = require('../utils/jwtGenerator');
 // const User = require('../models/user');
 const nodemailer = require('nodemailer');
-const sendMail = require('nodemailer/lib/mailer');
+// const sendMail = require('nodemailer/lib/mailer');
 const pool = require('../db/db');
 
 // eslint-disable-next-line consistent-return
