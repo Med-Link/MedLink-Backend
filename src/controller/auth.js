@@ -86,12 +86,6 @@ exports.forgotpassword = async (req, res) => {
   const payload = { id: user.rows[0].customerid };
   // console.log(user.rows[0].customerid);
   const token = jwt.sign({ payload }, process.env.PASSWORD_RESET, { noTimestamp: true, expiresIn: '20m' });
-  // if (token) {
-  //   return res.status(201).json({
-  //     message: 'Reset link sent', token,
-  //   });
-  // }
-  // return token;
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -103,7 +97,7 @@ exports.forgotpassword = async (req, res) => {
 
   const mailOptions = {
     from: 'medlinkapp.info@gmail.com',
-    to: 'akiladesilva97@gmail.com',
+    to: email,
     subject: 'MedLink Account password Reset Link',
     text: 'Click the link below to login to your MedLink account',
     html: `
