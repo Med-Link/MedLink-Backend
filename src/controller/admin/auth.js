@@ -88,7 +88,7 @@ exports.signin = async (req, res) => {
     if (user.rows.length === 0) {
       return res.status(401).json('Invalid Credential');
     }
-
+    const userdet = user.rows;
     const validPassword = await bcrypt.compare(
       password,
       user.rows[0].password,
@@ -101,7 +101,7 @@ exports.signin = async (req, res) => {
     const token = jwt.sign({ payload }, process.env.JWT_SECRET, { noTimestamp: true, expiresIn: '6h' });
     return res.json({
       token,
-      user,
+      userdet,
     });
   } catch (err) {
     console.error(err.message);
