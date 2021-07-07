@@ -91,7 +91,7 @@ exports.forgotpassword = async (req, res) => {
     service: 'gmail',
     auth: {
       user: 'medlinkapp.info@gmail.com',
-      pass: 'Medlink123',
+      pass: process.env.EMAIL_PASSWORD,
     },
   });
 

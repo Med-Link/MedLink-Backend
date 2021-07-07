@@ -97,7 +97,7 @@ exports.forgotpassword = async (req, res) => {
     service: 'gmail',
     auth: {
       user: 'medlinkapp.info@gmail.com',
-      pass: 'Medlink123',
+      pass: process.env.EMAIL_PASSWORD,
     },
   });
 
@@ -129,7 +129,7 @@ exports.resetpassword = async (req, res) => {
     // const decoded = jwt.decode(resetLink, process.env.PASSWORD_RESET);
     const userid = verify.payload.id;
     // console.log(userid);
-    const user = await pool.query('SELECT * FROM public.pharmacy WHERE customerid = $1', [
+    const user = await pool.query('SELECT * FROM public.pharmacy WHERE pharmacyid = $1', [
       userid,
     ]);
     if (user.rows.length === 0) {
