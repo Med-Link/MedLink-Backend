@@ -59,6 +59,12 @@ exports.signin = async (req, res) => {
     if (user.rows.length === 0) {
       return res.status(401).json('Invalid Credential');
     }
+    if (user.rows[0].activeStatus === 0) {
+      return res.status(401).json('Signup request not accepted ');
+    }
+    if (user.rows[0].verifiedemail === 0) {
+      return res.status(401).json('Please verify your email ');
+    }
     const userdet = user.rows;
     const validPassword = await bcrypt.compare(
       password,
@@ -70,7 +76,7 @@ exports.signin = async (req, res) => {
     }
     const payload = { id: user.rows[0].pharmacyid, role: 'pharmacy' };
     const token = jwt.sign({ payload }, process.env.JWT_SECRET, { noTimestamp: true, expiresIn: '6h' });
-    return res.json({
+    return res.status(201).json({
       token,
       userdet,
     });

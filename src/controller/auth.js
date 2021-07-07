@@ -1,9 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-// const jwtGenerator = require('../utils/jwtGenerator');
-// const User = require('../models/user');
 const nodemailer = require('nodemailer');
-// const sendMail = require('nodemailer/lib/mailer');
 const pool = require('../db/db');
 
 // eslint-disable-next-line consistent-return
@@ -20,13 +17,39 @@ exports.signup = async (req, res) => {
     if (user.rows.length > 0) {
       return res.status(401).json('User already exist!');
     }
+    const payload = { email };
+    // console.log(user.rows[0].customerid);
+    const token = jwt.sign({ payload }, process.env.PASSWORD_RESET, { noTimestamp: true, expiresIn: '20m' });
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'medlinkapp.info@gmail.com',
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
 
-    // const salt = bcrypt.genSalt(10);
+    const mailOptions = {
+      from: 'medlinkapp.info@gmail.com',
+      to: email,
+      subject: 'MedLink Account password Reset Link',
+      text: 'Click the link below to verify your Email',
+      html: `
+      <h2>Click the link below to verify</h2>
+      <p> ${process.env.CLIENT_URL}/${token} </p>`,
+    };
+
+    const sent = transporter.sendMail(mailOptions, (error) => {
+      if (sent) {
+        return res.status(401).json(error);
+      }
+    });
+
+    const verifiedemail = 0;
     const bcryptPassword = await bcrypt.hashSync(password, 10);
 
     const newUser = await pool.query(
-      'INSERT INTO public.customers ( email, firstname, lastname,  password) VALUES ($1, $2, $3, $4) RETURNING *',
-      [email, firstName, lastName, bcryptPassword],
+      'INSERT INTO public.customers ( email, firstname, lastname,  password, verifiedemail) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [email, firstName, lastName, bcryptPassword, verifiedemail],
     );
 
     // const jwtToken = jwtGenerator(newUser.rows[0].user_id);
@@ -53,7 +76,9 @@ exports.signin = async (req, res) => {
     if (user.rows.length === 0) {
       return res.status(401).json('Invalid Credential');
     }
-
+    if (user.rows[0].verifiedemail === 0) {
+      return res.status(401).json('Please verify your email ');
+    }
     const validPassword = await bcrypt.compare(
       password,
       user.rows[0].password,
@@ -72,6 +97,20 @@ exports.signin = async (req, res) => {
     console.error(err.message);
     res.status(500).send('Server error');
   }
+};
+
+exports.verifyemail = async (req, res) => {
+  const { token } = req.body;
+  const verify = jwt.verify(token, process.env.PASSWORD_RESET);
+  const useremail = verify.payload.email;
+
+  const user = await pool.query('UPDATE public.customers SET verifiedemail = $1 WHERE email = $2', [
+    1, useremail,
+  ]);
+  if (user) {
+    return res.status(201).json('User email verified');
+  }
+  return res.status(401).json('verification failed');
 };
 
 exports.forgotpassword = async (req, res) => {
