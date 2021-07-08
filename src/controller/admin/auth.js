@@ -57,13 +57,13 @@ exports.signup = async (req, res) => {
     if (user.rows.length > 0) {
       return res.status(401).json('admin already exist!');
     }
-
+    const activestatus = 0;
     // const salt = bcrypt.genSalt(10);
     const bcryptPassword = await bcrypt.hashSync(password, 10);
 
     const newUser = await pool.query(
-      'INSERT INTO public.admin ( email, firstname, lastname,  password) VALUES ($1, $2, $3, $4) RETURNING *',
-      [email, firstName, lastName, bcryptPassword],
+      'INSERT INTO public.admin ( email, firstname, lastname, activestatus, password) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [email, firstName, lastName, activestatus, bcryptPassword],
     );
 
     // const jwtToken = jwtGenerator(newUser.rows[0].user_id);
@@ -88,6 +88,9 @@ exports.signin = async (req, res) => {
     // const role = customer;
     if (user.rows.length === 0) {
       return res.status(401).json('Invalid Credential');
+    }
+    if (user.rows[0].activeStatus === 0) {
+      return res.status(401).json('Signup request not accepted ');
     }
     const userdet = user.rows;
     const validPassword = await bcrypt.compare(

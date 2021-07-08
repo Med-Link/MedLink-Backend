@@ -24,21 +24,49 @@ exports.signup = async (req, res) => {
     if (req.files.length > 0) {
       regDocs = req.files.map((file) => ({ img: file.location }));
     }
+    const payload = { email };
+    // console.log(user.rows[0].customerid);
+    const token = jwt.sign({ payload }, process.env.PASSWORD_RESET, { noTimestamp: true, expiresIn: '20m' });
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'medlinkapp.info@gmail.com',
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: 'medlinkapp.info@gmail.com',
+      to: email,
+      subject: 'MedLink Account Email verification Link',
+      text: 'Click the link below to verify your Email',
+      html: `
+      <h2>Click the link below to verify email</h2>
+      <p> ${process.env.CLIENT_URL}/${token} </p>`,
+    };
+
+    const sent = transporter.sendMail(mailOptions, (error) => {
+      if (sent) {
+        return res.status(401).json(error);
+      }
+    });
 
     // const salt = bcrypt.genSalt(10);
     const bcryptPassword = await bcrypt.hashSync(password, 10);
     const activeStatus = 0;
+    const verifiedemail = 0;
     let names = [];
     names = regDocs.map((item) => item.img);
 
     const newUser = await pool.query(
-      'INSERT INTO public.pharmacy ( email, name, contactnumber, activestatus, document1, document2, document3, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-      [email, name, contactNumber, activeStatus, names[0], names[1], names[2], bcryptPassword],
+      'INSERT INTO public.pharmacy ( email, name, contactnumber, activestatus, verifiedemail, document1, document2, document3, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+      [email, name, contactNumber, activeStatus, verifiedemail, names[0], names[1], names[2], bcryptPassword],
     );
     // const jwtToken = jwtGenerator(newUser.rows[0].user_id);
     if (newUser) {
       return res.status(201).json({
         message: 'pharmacy created success',
+        verifytoken: token,
       });
     }
   } catch (err) {
@@ -62,7 +90,7 @@ exports.signin = async (req, res) => {
     if (user.rows[0].activeStatus === 0) {
       return res.status(401).json('Signup request not accepted ');
     }
-    if (user.rows[0].verifiedemail === 0) {
+    if (user.rows[0].verifiedemail === false) {
       return res.status(401).json('Please verify your email ');
     }
     const userdet = user.rows;
@@ -84,6 +112,20 @@ exports.signin = async (req, res) => {
     console.error(err.message);
     res.status(500).send('Server error');
   }
+};
+
+exports.verifyemail = async (req, res) => {
+  const { token } = req.body;
+  const verify = jwt.verify(token, process.env.PASSWORD_RESET);
+  const useremail = verify.payload.email;
+
+  const user = await pool.query('UPDATE public.pharmacy SET verifiedemail = $1 WHERE email = $2', [
+    1, useremail,
+  ]);
+  if (user) {
+    return res.status(201).json('User email verified');
+  }
+  return res.status(401).json('verification failed');
 };
 
 exports.forgotpassword = async (req, res) => {
