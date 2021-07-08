@@ -31,10 +31,10 @@ exports.signup = async (req, res) => {
     const mailOptions = {
       from: 'medlinkapp.info@gmail.com',
       to: email,
-      subject: 'MedLink Account password Reset Link',
+      subject: 'MedLink Account Email verification Link',
       text: 'Click the link below to verify your Email',
       html: `
-      <h2>Click the link below to verify</h2>
+      <h2>Click the link below to verify email</h2>
       <p> ${process.env.CLIENT_URL}/${token} </p>`,
     };
 
@@ -56,6 +56,7 @@ exports.signup = async (req, res) => {
     if (newUser) {
       return res.status(201).json({
         message: 'user created success',
+        verifytoken: token,
       });
     }
   } catch (err) {
@@ -76,9 +77,10 @@ exports.signin = async (req, res) => {
     if (user.rows.length === 0) {
       return res.status(401).json('Invalid Credential');
     }
-    if (user.rows[0].verifiedemail === 0) {
+    if (user.rows[0].verifiedemail === false) {
       return res.status(401).json('Please verify your email ');
     }
+    console.log(user.rows[0].verifiedemail);
     const validPassword = await bcrypt.compare(
       password,
       user.rows[0].password,
