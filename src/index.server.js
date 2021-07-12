@@ -1,5 +1,6 @@
 const express = require('express');
 const env = require('dotenv');
+const cors = require('cors');
 
 const app = express();
 const bodyParser = require('body-parser');
@@ -15,6 +16,7 @@ const orderRoutes = require('./routes/order');
 const pharmacyorderRoutes = require('./routes/pharmacy/order');
 
 env.config();
+app.use(cors());
 // already included in express package
 // can use express.json instead of body parser
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));

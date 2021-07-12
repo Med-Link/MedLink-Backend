@@ -40,8 +40,9 @@ exports.signup = async (req, res) => {
 
     const sent = transporter.sendMail(mailOptions, (error) => {
       if (sent) {
-        return res.status(401).json(error);
+        return 'email sent';
       }
+      return res.status(401).json(error);
     });
 
     const verifiedemail = 0;
