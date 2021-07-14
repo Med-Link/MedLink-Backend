@@ -78,9 +78,9 @@ exports.signin = async (req, res) => {
     if (user.rows.length === 0) {
       return res.status(401).json('Invalid Credential');
     }
-    if (user.rows[0].verifiedemail === false) {
-      return res.status(401).json('Please verify your email ');
-    }
+    // if (user.rows[0].verifiedemail === false) {
+    //   return res.status(401).json('Please verify your email ');
+    // }
     console.log(user.rows[0].verifiedemail);
     const validPassword = await bcrypt.compare(
       password,
@@ -183,3 +183,4 @@ exports.resetpassword = async (req, res) => {
   }
   return res.status(401).json({ error: 'Reset link expired' });
 };
+

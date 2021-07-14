@@ -90,7 +90,7 @@ exports.signin = async (req, res) => {
     if (user.rows[0].activeStatus === 0) {
       return res.status(401).json('Signup request not accepted ');
     }
-    if (user.rows[0].verifiedemail === false) {
+    if (user.rows[0].verifiedemail === 0) {
       return res.status(401).json('Please verify your email ');
     }
     const userdet = user.rows;
