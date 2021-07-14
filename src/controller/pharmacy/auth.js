@@ -85,13 +85,13 @@ exports.signin = async (req, res) => {
     ]);
     // const role = customer;
     if (user.rows.length === 0) {
-      return res.status(401).json('Invalid Credential');
+      return res.status(400).json('Invalid Credential');
     }
     if (user.rows[0].activeStatus === 0) {
-      return res.status(401).json('Signup request not accepted ');
+      return res.status(400).json('Signup request not accepted ');
     }
     if (user.rows[0].verifiedemail === 0) {
-      return res.status(401).json('Please verify your email ');
+      return res.status(400).json('Please verify your email ');
     }
     const userdet = user.rows;
     const validPassword = await bcrypt.compare(
@@ -100,11 +100,11 @@ exports.signin = async (req, res) => {
     );
 
     if (!validPassword) {
-      return res.status(401).json('Invalid Credential');
+      return res.status(400).json('Invalid Credential');
     }
     const payload = { id: user.rows[0].pharmacyid, role: 'pharmacy' };
     const token = jwt.sign({ payload }, process.env.JWT_SECRET, { noTimestamp: true, expiresIn: '6h' });
-    return res.status(201).json({
+    return res.status(200).json({
       token,
       userdet,
     });
@@ -123,9 +123,9 @@ exports.verifyemail = async (req, res) => {
     1, useremail,
   ]);
   if (user) {
-    return res.status(201).json('User email verified');
+    return res.status(200).json('User email verified');
   }
-  return res.status(401).json('verification failed');
+  return res.status(400).json('verification failed');
 };
 
 exports.forgotpassword = async (req, res) => {
@@ -135,7 +135,7 @@ exports.forgotpassword = async (req, res) => {
     email,
   ]);
   if (user.rows.length === 0) {
-    return res.status(401).json('User from this email does not exist');
+    return res.status(400).json('User from this email does not exist');
   }
   const payload = { id: user.rows[0].pharmacyid };
   // console.log(user.rows[0].customerid);
@@ -161,9 +161,9 @@ exports.forgotpassword = async (req, res) => {
 
   const sent = transporter.sendMail(mailOptions, (error, info) => {
     if (sent) {
-      return res.status(401).json(error);
+      return res.status(400).json(error);
     }
-    return res.status(201).json(`Email sent: ${info.response}`);
+    return res.status(200).json(`Email sent: ${info.response}`);
   });
 };
 
@@ -181,17 +181,17 @@ exports.resetpassword = async (req, res) => {
       userid,
     ]);
     if (user.rows.length === 0) {
-      return res.status(401).json('Invalid reset link');
+      return res.status(400).json('Invalid reset link');
     }
     const resetpass = pool.query('UPDATE public.pharmacy SET password = $1 WHERE pharmacyid = $2', [
       bcryptPassword, userid,
     ]);
     if (resetpass) {
-      return res.status(201).json({
+      return res.status(200).json({
         message: 'user password changed success',
       });
     }
-    return res.status(401).json({ error: 'Error in reseting password' });
+    return res.status(400).json({ error: 'Error in reseting password' });
   }
-  return res.status(401).json({ error: 'Reset link expired' });
+  return res.status(400).json({ error: 'Reset link expired' });
 };
