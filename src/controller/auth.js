@@ -35,7 +35,7 @@ exports.signup = async (req, res) => {
       text: 'Click the link below to verify your Email',
       html: `
       <h2>Click the link below to verify email</h2>
-      <p> ${process.env.CLIENT_URL}/${token} </p>`,
+      <p> ${process.env.CLIENT_URL}/verifyemail/${token} </p>`,
     };
 
     const sent = transporter.sendMail(mailOptions, (error) => {

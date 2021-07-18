@@ -38,7 +38,7 @@ exports.getPharmacyOrder_reqs = async (req, res) => {
 // eslint-disable-next-line consistent-return
 exports.getPharmacyOrder_req = async (req, res) => {
   const {
-    orderid,
+    orderreqid,
   } = req.body;
 
   const token = req.headers.authorization.split(' ')[1];
@@ -51,7 +51,7 @@ exports.getPharmacyOrder_req = async (req, res) => {
   try {
     const singleOrder = await pool.query(
       'SELECT * FROM order_req WHERE pharmacyid = $1 AND id = $2', [
-        pharmacyid, orderid,
+        pharmacyid, orderreqid,
       ],
     );
     if (singleOrder.rows.length === 0) {
@@ -62,6 +62,35 @@ exports.getPharmacyOrder_req = async (req, res) => {
       return res.status(201).json({
         message: 'orders listed success',
         singleOrder,
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.rejectOrder_req = async (req, res) => {
+  const {
+    orderreqid,
+    rejectmessage,
+  } = req.body;
+
+  const status = 'reject';
+
+  try {
+    const rejectOrder = await pool.query(
+      'UPDATE public.order_req SET acceptstatus = $1 AND SET rejectmessage = $2 WHERE id = $3', [
+        status, rejectmessage, orderreqid,
+      ],
+    );
+    // if (singleOrder.rows.length === 0) {
+    //   return res.status(401).json('No rows to show');
+    // }
+
+    if (rejectOrder) {
+      return res.status(200).json({
+        message: 'orders rejected success',
       });
     }
   } catch (err) {
