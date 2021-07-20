@@ -15,6 +15,7 @@ const pharmacyRoutes = require('./routes/pharmacy/auth');
 const orderRoutes = require('./routes/order');
 const pharmacyorderRoutes = require('./routes/pharmacy/order');
 const pharmacyorderbillRoutes = require('./routes/pharmacy/orderbill');
+const pharmacystockRoutes = require('./routes/pharmacy/stock');
 
 env.config();
 app.use(cors());
@@ -22,20 +23,6 @@ app.use(cors());
 // can use express.json instead of body parser
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 app.use(bodyParser.json());
-
-// mongodb+srv://root:<password>@cluster0.icjfy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
-// mongoose
-//   .connect(
-//     `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@cluster0.icjfy.mongodb.net/${process.env.MONGO_DB_DATABASE}?retryWrites=true&w=majority`,
-//     {
-//       useNewUrlParser: true,
-//       useUnifiedTopology: true,
-//       useCreateIndex: true,
-//     },
-//   )
-//   .then(() => {
-//     console.log('Database connected');
-//   });
 
 app.get('/', (req, res) => {
   res.status(200).json({
@@ -56,6 +43,7 @@ app.use('/api', orderRoutes);
 app.use('/api', pharmacyorderRoutes);
 app.use('/api', adminpharmacyhandlingRoutes);
 app.use('/api', pharmacyorderbillRoutes);
+app.use('/api', pharmacystockRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
