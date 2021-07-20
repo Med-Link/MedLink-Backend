@@ -6,7 +6,7 @@ const { sendorderbill } = require('../../controller/pharmacy/orderbill');
 
 const router = express.Router();
 
-router.get('/pharmacy/sendorderbill', requireSignin, pharmacyMiddleware, sendorderbill);
+router.post('/pharmacy/sendorderbill', requireSignin, pharmacyMiddleware, sendorderbill);
 // router.post('/pharmacy/getOrderReq', requireSignin, pharmacyMiddleware, getPharmacyOrder_req);
 
 module.exports = router;
