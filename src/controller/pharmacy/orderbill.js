@@ -16,25 +16,26 @@ exports.sendorderbill = async (req, res) => {
   const pharmacyid = decoded.payload.id;
 
   // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < medlist.length; i++) {
-    const { batchid } = medlist[i];
-    const { amount } = medlist[i];
-
-    const sendmedlist = pool.query(
-      'INSERT INTO public.list_items( batchid, quantity, order_reqid) VALUES ($1, $2, $3) RETURNING *',
-      [batchid, amount, orderreqid],
-    );
-    if (!sendmedlist) {
-      res.status(400).send('list adding error');
-    }
-    // }
-  }
   try {
     const sendmedlist = await pool.query(
       'INSERT INTO public.order_medlist( order_reqid, totalprice, pharmacyid, customerid, acceptstatus) VALUES ($1, $2, $3, $4, $5) RETURNING *',
       [orderreqid, totalprice, pharmacyid, customerid, acceptstatus],
     );
-    if (sendmedlist && sendmedlist) {
+    const { medlistid } = sendmedlist.rows[0];
+    for (let i = 0; i < medlist.length; i++) {
+      const { batchid } = medlist[i];
+      const { amount } = medlist[i];
+
+      const senditemlist = pool.query(
+        'INSERT INTO public.list_items( batchid, quantity, medlistid) VALUES ($1, $2, $3) RETURNING *',
+        [batchid, amount, medlistid],
+      );
+      if (!senditemlist) {
+        res.status(400).send('list adding error');
+      }
+      // }
+    }
+    if (sendmedlist) {
       return res.status(201).json({
         message: 'medicine list sent success',
       });
@@ -70,3 +71,32 @@ exports.allorderbills = async (req, res) => {
   }
 };
 
+exports.singleorderbills = async (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const pharmacyid = decoded.payload.id;
+
+  const {
+    medlistid,
+
+  } = req.body;
+
+  try {
+    const getallbills = await pool.query(
+      'SELECT * FROM public.order_medlist WHERE pharmacyid = $1 AND medlistid = $2', [
+        pharmacyid, medlistid,
+      ],
+    );
+    const { rows } = getallbills;
+
+    if (getallbills) {
+      return res.status(201).json({
+        message: 'order bill listed success',
+        rows,
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
