@@ -22,7 +22,7 @@ exports.addstock = async (req, res) => {
 
     if (newBatch) {
       return res.status(201).json({
-        message: 'Stock updated success',
+        message: 'Stock listing added success',
       });
     }
   } catch (err) {
@@ -30,3 +30,31 @@ exports.addstock = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.updatestock = async (req, res) => {
+  const {
+    batchid,
+    quantity,
+    price,
+    expiredate,
+    manufacdate,
+  } = req.body;
+  // console.log(req);
+  try {
+    const update = await pool.query(
+      'UPDATE public.medicinebatch SET quantity = $1, price = $2, expiredate = $3, manufacdate = $4 WHERE batchid = $5', [
+        quantity, price, expiredate, manufacdate, batchid,
+      ],
+    );
+
+    if (update) {
+      return res.status(201).json({
+        message: 'Stock record updated success',
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+ 
