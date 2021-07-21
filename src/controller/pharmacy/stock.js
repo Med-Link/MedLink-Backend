@@ -86,27 +86,29 @@ exports.deletestock = async (req, res) => {
   }
 };
 
-// exports.viewstock = async (req, res) => {
-//   const token = req.headers.authorization.split(' ')[1];
+exports.viewallstock = async (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
 
-//   const decoded = jwt.decode(token, process.env.JWT_SECRET);
-//   const pharmacyid = decoded.payload.id;
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const pharmacyid = decoded.payload.id;
 
-//   // console.log(req);
-//   try {
-//     const update = await pool.query(
-//       'SELECT public.medicinebatch SET quantity = $1, price = $2, expiredate = $3, manufacdate = $4 WHERE batchid = $5', [
-//         quantity, price, expiredate, manufacdate, batchid,
-//       ],
-//     );
+  // console.log(req);
+  try {
+    const update = await pool.query(
+      'SELECT * FROM public.medicinebatch WHERE pharmacyid = $1', [
+        pharmacyid,
+      ],
+    );
+    const { rows } = update;
 
-//     if (update) {
-//       return res.status(201).json({
-//         message: 'Stock record updated success',
-//       });
-//     }
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('Server error');
-//   }
-// };
+    if (update) {
+      return res.status(201).json({
+        message: 'all Stocks listed success',
+        rows,
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
