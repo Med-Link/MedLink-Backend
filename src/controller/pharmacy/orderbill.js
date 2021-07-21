@@ -45,33 +45,28 @@ exports.sendorderbill = async (req, res) => {
   }
 };
 
-// exports.getPharmacyOrder_reqs = async (req, res) => {
-//   const token = req.headers.authorization.split(' ')[1];
+exports.allorderbills = async (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const pharmacyid = decoded.payload.id;
 
-//   const decoded = jwt.decode(token, process.env.JWT_SECRET);
-//   const pharmacyid = decoded.payload.id;
-//   // var decoded = jwt_decode(token);
-//   // console.log(pharmacyid);
+  try {
+    const getallbills = await pool.query(
+      'SELECT * FROM public.order_medlist WHERE pharmacyid = $1', [
+        pharmacyid,
+      ],
+    );
+    const { rows } = getallbills;
 
-//   try {
-//     const allOrders = await pool.query(
-//       'SELECT * FROM order WHERE pharmacyid = $1', [
-//         pharmacyid,
-//       ],
-//     );
+    if (getallbills) {
+      return res.status(201).json({
+        message: 'all order bills listed success',
+        rows,
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
 
-//     if (allOrders.rows.length === 0) {
-//       return res.status(401).json('No rows to show');
-//     }
-
-//     if (allOrders) {
-//       return res.status(201).json({
-//         message: 'orders listed success',
-//         allOrders,
-//       });
-//     }
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('Server error');
-//   }
-// };

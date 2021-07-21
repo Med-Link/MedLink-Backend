@@ -1,4 +1,3 @@
-// const Order = require('../../models/order');
 const jwt = require('jsonwebtoken');
 
 const pool = require('../../db/db');
@@ -9,8 +8,6 @@ exports.getPharmacyOrder_reqs = async (req, res) => {
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
   const pharmacyid = decoded.payload.id;
-  // var decoded = jwt_decode(token);
-  // console.log(pharmacyid);
 
   try {
     const allOrders = await pool.query(
@@ -45,8 +42,6 @@ exports.getPharmacyOrder_req = async (req, res) => {
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
   const pharmacyid = decoded.payload.id;
-  // var decoded = jwt_decode(token);
-  // console.log(customerid);
 
   try {
     const singleOrder = await pool.query(

@@ -12,5 +12,4 @@ router.delete('/pharmacy/deletestock', requireSignin, pharmacyMiddleware, delete
 router.get('/pharmacy/viewallstock', requireSignin, pharmacyMiddleware, viewallstock);
 router.post('/pharmacy/viewsinglestock', requireSignin, pharmacyMiddleware, viewsinglestock);
 
-
 module.exports = router;
