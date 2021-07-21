@@ -94,16 +94,48 @@ exports.viewallstock = async (req, res) => {
 
   // console.log(req);
   try {
-    const update = await pool.query(
+    const select = await pool.query(
       'SELECT * FROM public.medicinebatch WHERE pharmacyid = $1', [
         pharmacyid,
       ],
     );
-    const { rows } = update;
+    const { rows } = select;
 
-    if (update) {
+    if (select) {
       return res.status(201).json({
         message: 'all Stocks listed success',
+        rows,
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+
+exports.viewsinglestock = async (req, res) => {
+  const {
+    batchid,
+  } = req.body;
+
+  const token = req.headers.authorization.split(' ')[1];
+
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const pharmacyid = decoded.payload.id;
+
+  // console.log(req);
+  try {
+    const selectone = await pool.query(
+      'SELECT * FROM public.medicinebatch WHERE pharmacyid = $1 AND batchid = $2', [
+        pharmacyid, batchid,
+      ],
+    );
+    const { rows } = selectone;
+
+    if (selectone) {
+      return res.status(201).json({
+        message: 'Single Stocks listed success',
         rows,
       });
     }
