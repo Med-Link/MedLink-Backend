@@ -23,16 +23,30 @@ exports.sendorderbill = async (req, res) => {
     );
     const { medlistid } = sendmedlist.rows[0];
     for (let i = 0; i < medlist.length; i++) {
+      // const itemsfind = async () => {
       const { batchid } = medlist[i];
       const { amount } = medlist[i];
+      // eslint-disable-next-line no-await-in-loop
+      const selectunitprice = await pool.query(
+        'SELECT price FROM public.medicinebatch WHERE batchid = $1', [
+          batchid,
+        ],
+      );
 
-      const senditemlist = pool.query(
-        'INSERT INTO public.list_items( batchid, quantity, medlistid) VALUES ($1, $2, $3) RETURNING *',
-        [batchid, amount, medlistid],
+      const x = parseInt(amount, 10);
+
+      const price = x * selectunitprice.rows[0].price;
+
+      // eslint-disable-next-line no-await-in-loop
+      const senditemlist = await pool.query(
+        'INSERT INTO public.list_items( batchid, quantity, medlistid, price) VALUES ($1, $2, $3, $4) RETURNING *',
+        [batchid, amount, medlistid, price],
       );
       if (!senditemlist) {
         res.status(400).send('list adding error');
       }
+      // if (!itemsfind) {
+      //   res.status(400).send('list adding error');
       // }
     }
     if (sendmedlist) {
@@ -60,7 +74,7 @@ exports.allorderbills = async (req, res) => {
     const { rows } = getallbills;
 
     if (getallbills) {
-      return res.status(201).json({
+      return res.status(200).json({
         message: 'all order bills listed success',
         rows,
       });
@@ -71,7 +85,7 @@ exports.allorderbills = async (req, res) => {
   }
 };
 
-exports.singleorderbills = async (req, res) => {
+exports.singleorderbill = async (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
   const pharmacyid = decoded.payload.id;
@@ -82,17 +96,19 @@ exports.singleorderbills = async (req, res) => {
   } = req.body;
 
   try {
-    const getallbills = await pool.query(
-      'SELECT * FROM public.order_medlist WHERE pharmacyid = $1 AND medlistid = $2', [
-        pharmacyid, medlistid,
+    const getorderbill = await pool.query(
+      'SELECT order_medlist.order_reqid, order_medlist.totalprice, order_medlist.acceptstatus, list_items.quantity, list_items.price, medicinebatch.batchid, medicines.medname, medicines.medid FROM public.order_medlist INNER JOIN public.list_items ON order_medlist.medlistid = list_items.medlistid INNER JOIN public.medicinebatch ON list_items.batchid = medicinebatch.batchid INNER JOIN public.medicines ON medicinebatch.medid = medicines.medid WHERE order_medlist.medlistid = $1 AND order_medlist.pharmacyid = $2', [
+        medlistid,
+        pharmacyid,
       ],
     );
-    const { rows } = getallbills;
-
-    if (getallbills) {
-      return res.status(201).json({
+    const { rows } = getorderbill;
+    console.log(getorderbill);
+    if (getorderbill) {
+      return res.status(200).json({
         message: 'order bill listed success',
         rows,
+
       });
     }
   } catch (err) {
