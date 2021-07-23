@@ -18,7 +18,6 @@ const pharmacyorderbillRoutes = require('./routes/pharmacy/orderbill');
 const pharmacystockRoutes = require('./routes/pharmacy/stock');
 const customerorderbillRoutes = require('./routes/orderbill');
 
-
 env.config();
 app.use(cors());
 // already included in express package
@@ -51,3 +50,5 @@ app.use('/api', customerorderbillRoutes);
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });
+
+module.exports = app;
