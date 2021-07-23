@@ -16,6 +16,8 @@ const orderRoutes = require('./routes/order');
 const pharmacyorderRoutes = require('./routes/pharmacy/order');
 const pharmacyorderbillRoutes = require('./routes/pharmacy/orderbill');
 const pharmacystockRoutes = require('./routes/pharmacy/stock');
+const customerorderbillRoutes = require('./routes/orderbill');
+
 
 env.config();
 app.use(cors());
@@ -44,6 +46,7 @@ app.use('/api', pharmacyorderRoutes);
 app.use('/api', adminpharmacyhandlingRoutes);
 app.use('/api', pharmacyorderbillRoutes);
 app.use('/api', pharmacystockRoutes);
+app.use('/api', customerorderbillRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
