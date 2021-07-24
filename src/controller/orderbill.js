@@ -44,7 +44,7 @@ exports.singleorderbill = async (req, res) => {
       ],
     );
     const { rows } = getorderbill;
-    console.log(getorderbill);
+    // console.log(getorderbill);
     if (getorderbill) {
       return res.status(200).json({
         message: 'order bill listed success',
@@ -57,3 +57,36 @@ exports.singleorderbill = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.acceptorderbill = async (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const customerid = decoded.payload.id;
+
+  const {
+    medlistid,
+
+  } = req.body;
+
+  try {
+    const acceptbill = await pool.query(
+      'UPDATE public.order_medlist SET acceptstatus = $1 WHERE medlistid = $2 AND customerid = $3', [
+        1, medlistid, customerid,
+      ],
+    );
+    // const { rows } = getorderbill;
+    // console.log(getorderbill);
+    if (acceptbill) {
+      return res.status(200).json({
+        message: 'order bill accepted success',
+        // rows,
+
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+
