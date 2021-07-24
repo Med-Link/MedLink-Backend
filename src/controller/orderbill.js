@@ -89,4 +89,27 @@ exports.acceptorderbill = async (req, res) => {
   }
 };
 
+exports.acceptedbills = async (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const customerid = decoded.payload.id;
 
+  try {
+    const getallbills = await pool.query(
+      'SELECT * FROM public.order_medlist WHERE customerid = $1 AND acceptstatus = $2', [
+        customerid, true,
+      ],
+    );
+    const { rows } = getallbills;
+
+    if (getallbills) {
+      return res.status(200).json({
+        message: 'all accepted order bills listed success',
+        rows,
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
