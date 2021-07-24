@@ -3,8 +3,6 @@ Backend application of MedLink
 
 # Read Me Template
 
-> This is a ReadMe template to help save you time and effort.
-
 ---
 ## Description
 MedLink is a web-based platform which connects pharmacies and their customers. It  will be established to manage sales and inventories of the pharmacies. It is a platform for the customers to find the medicines they need. It is a platform for the customers to find the nearest pharmacies that can fulfill their needs. This application will help people to order and get their medicine delivered to wherever they want. This is a platform that minimize the difficulties people face, during emergencies.
@@ -38,9 +36,7 @@ AWS S3 Bucket media storage
 
 #### API Reference
 
-```html
-    <p>dummy code</p>
-```
+
 [Back To The Top](#read-me-template)
 
 ---
