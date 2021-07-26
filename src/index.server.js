@@ -18,6 +18,8 @@ const pharmacyorderbillRoutes = require('./routes/pharmacy/orderbill');
 const pharmacystockRoutes = require('./routes/pharmacy/stock');
 const customerorderbillRoutes = require('./routes/orderbill');
 const ordercompleteRoutes = require('./routes/completedorders');
+const addnewadminRoutes = require('./routes/admin/addAdmin');
+
 
 env.config();
 app.use(cors());
@@ -40,6 +42,7 @@ app.post('/data', (req, res) => {
 
 app.use('/api', authRoutes);
 app.use('/api', adminRoutes);
+app.use('/api', addnewadminRoutes);
 app.use('/api', pharmacyRoutes);
 app.use('/api', orderRoutes);
 app.use('/api', pharmacyorderRoutes);

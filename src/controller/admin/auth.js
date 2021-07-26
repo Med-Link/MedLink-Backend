@@ -54,9 +54,6 @@ exports.signin = async (req, res) => {
     if (user.rows.length === 0) {
       return res.status(401).json('Invalid Credential');
     }
-    // if (user.rows[0].activeStatus === 0) {
-    //   return res.status(401).json('Signup request not accepted ');
-    // }
     const userdet = user.rows;
     const validPassword = await bcrypt.compare(
       password,
