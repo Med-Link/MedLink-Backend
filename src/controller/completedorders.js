@@ -69,11 +69,6 @@ exports.checkout = async (req, res) => {
     medlistid,
   } = req.body;
 
-  // const token = req.headers.authorization.split(' ')[1];
-  // const decoded = jwt.decode(token, process.env.JWT_SECRET);
-  // const customerid = decoded.payload.id;
-
-  // console.log(deliverycost);
   const paymentstatus = 1;
 
   try {
@@ -92,4 +87,3 @@ exports.checkout = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
-
