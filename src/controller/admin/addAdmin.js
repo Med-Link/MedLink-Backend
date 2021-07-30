@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const bcrypt = require('bcrypt');
 const pool = require('../../db/db');
 

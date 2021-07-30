@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const jwt = require('jsonwebtoken');
 const pool = require('../../db/db');
 
@@ -112,7 +113,6 @@ exports.viewallstock = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
-
 
 exports.viewsinglestock = async (req, res) => {
   const {

@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const pool = require('../../db/db');
 
 exports.addmedicine = async (req, res) => {
@@ -11,7 +12,6 @@ exports.addmedicine = async (req, res) => {
       [brandname, medname],
     );
 
-    // const jwtToken = jwtGenerator(newUser.rows[0].user_id);
     if (newUser) {
       return res.status(201).json({
         message: 'medicine type added success',
@@ -41,3 +41,23 @@ exports.viewallmedicine = async (req, res) => {
   }
 };
 
+exports.deletemedicine = async (req, res) => {
+  const {
+    medid,
+  } = req.body;
+
+  try {
+    const medicine = await pool.query('DELETE FROM public.medicine WHERE medid = $1', [
+      medid,
+    ]);
+
+    if (medicine) {
+      return res.status(201).json({
+        message: 'all medicine types listed success',
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};

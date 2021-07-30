@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const jwt = require('jsonwebtoken');
 
 const pool = require('../../db/db');
