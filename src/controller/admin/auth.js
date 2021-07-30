@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 // const jwt = require('jsonwebtoken');
 // const User = require('../../models/user');
 
@@ -65,7 +66,8 @@ exports.signin = async (req, res) => {
     }
     const payload = { id: user.rows[0].adminid, role: 'admin' };
     const token = jwt.sign({ payload }, process.env.JWT_SECRET, { noTimestamp: true, expiresIn: '6h' });
-    return res.json({
+    res.cookie('token', token, { expiresIn: '6h' });
+    return res.status(200).json({
       token,
       userdet,
     });
@@ -73,6 +75,13 @@ exports.signin = async (req, res) => {
     console.error(err.message);
     res.status(500).send('Server error');
   }
+};
+
+exports.signout = (req, res) => {
+  res.clearCookie('token');
+  res.status(200).json({
+    message: 'Signout successfully...!',
+  });
 };
 
 exports.forgotpassword = async (req, res) => {
