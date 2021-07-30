@@ -106,6 +106,7 @@ exports.signin = async (req, res) => {
     }
     const payload = { id: user.rows[0].pharmacyid, role: 'pharmacy' };
     const token = jwt.sign({ payload }, process.env.JWT_SECRET, { noTimestamp: true, expiresIn: '6h' });
+    res.cookie('token', token, { expiresIn: '6h' });
     return res.status(200).json({
       token,
       userdet,
@@ -114,6 +115,13 @@ exports.signin = async (req, res) => {
     console.error(err.message);
     res.status(500).send('Server error');
   }
+};
+
+exports.signout = (req, res) => {
+  res.clearCookie('token');
+  res.status(200).json({
+    message: 'Signout successfully...!',
+  });
 };
 
 exports.verifyemail = async (req, res) => {
