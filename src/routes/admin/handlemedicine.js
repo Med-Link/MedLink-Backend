@@ -2,11 +2,13 @@ const express = require('express');
 const { requireSignin, adminMiddleware } = require('../../common-middleware');
 
 const router = express.Router();
-const { addnewAdmin, viewalladmins } = require('../../controller/admin/addAdmin');
+const { addmedicine, viewallmedicine } = require('../../controller/admin/handlemedicine');
 // const { isRequestValidated, validateSigninRequest } = require('../../validators/auth');
 
 // router.post('/admin/addnewAdmin', validateSigninRequest, isRequestValidated, addnewAdmin);
-router.post('/admin/addmedicine', requireSignin, adminMiddleware, viewalladmins);
+router.post('/admin/addmedicine', requireSignin, adminMiddleware, addmedicine);
+router.get('/admin/addmedicine', requireSignin, adminMiddleware, viewallmedicine);
+
 
 // router.post('/admin/signup', validateSignupRequest, isRequestValidated, signup);
 

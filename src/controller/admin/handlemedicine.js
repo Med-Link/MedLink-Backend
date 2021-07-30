@@ -23,3 +23,21 @@ exports.addmedicine = async (req, res) => {
   }
 };
 
+exports.viewallmedicine = async (req, res) => {
+  try {
+    const allmedicine = await pool.query('SELECT * FROM public.medicine');
+
+    const result = allmedicine.rows;
+
+    if (allmedicine) {
+      return res.status(201).json({
+        message: 'all medicine types listed success',
+        result,
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
