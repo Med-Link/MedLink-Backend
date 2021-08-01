@@ -4,13 +4,14 @@ const pool = require('../db/db');
 
 exports.allpharmacies = async (req, res) => {
   try {
-    const checkoutorder = await pool.query(
+    const allpharmacieslist = await pool.query(
       'SELECT * FROM public.pharmacy',
     );
 
-    if (checkoutorder) {
+    if (allpharmacieslist) {
       return res.status(201).json({
-        message: 'payment made success',
+        message: 'pharmacies listed success',
+        allpharmacieslist,
       });
     }
   } catch (err) {
@@ -21,13 +22,36 @@ exports.allpharmacies = async (req, res) => {
 
 exports.pharmacybydistrict = async (req, res) => {
   try {
-    const checkoutorder = await pool.query(
+    const searchpharmacy = await pool.query(
       'SELECT * FROM public.pharmacy',
     );
 
-    if (checkoutorder) {
+    if (searchpharmacy) {
       return res.status(201).json({
-        message: 'payment made success',
+        message: 'pharmacies listed success',
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.pharmacybymedicine = async (req, res) => {
+  const {
+    medname,
+  } = req.body;
+  try {
+    const searchpharmacy = await pool.query(
+      'SELECT pharmacy.pharmacyid FROM public.pharmacy INNER JOIN public.medicinebatch ON pharmacy.pharmacyid = medicinebatch.pharmacyid INNER JOIN medicines ON medicinebatch.medid = medicines.medid WHERE medicines.medname = $1',
+      [medname],
+    );
+    const result = searchpharmacy.fields;
+    // console.log(searchpharmacy);
+    if (searchpharmacy) {
+      return res.status(201).json({
+        message: 'pharmacies listed success',
+        result,
       });
     }
   } catch (err) {

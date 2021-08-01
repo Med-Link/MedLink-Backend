@@ -9,15 +9,16 @@ const bodyParser = require('body-parser');
 
 // routes
 const authRoutes = require('./routes/auth');
+const ordercompleteRoutes = require('./routes/completedorders');
+const customerorderbillRoutes = require('./routes/orderbill');
+const orderRoutes = require('./routes/order');
+const findpharmacyRoutes = require('./routes/findpharmacy');
+const pharmacyRoutes = require('./routes/pharmacy/auth');
+const pharmacyorderRoutes = require('./routes/pharmacy/order');
+const pharmacystockRoutes = require('./routes/pharmacy/stock');
+const pharmacyorderbillRoutes = require('./routes/pharmacy/orderbill');
 const adminRoutes = require('./routes/admin/auth');
 const adminpharmacyhandlingRoutes = require('./routes/admin/handlingpharmacy');
-const pharmacyRoutes = require('./routes/pharmacy/auth');
-const orderRoutes = require('./routes/order');
-const pharmacyorderRoutes = require('./routes/pharmacy/order');
-const pharmacyorderbillRoutes = require('./routes/pharmacy/orderbill');
-const pharmacystockRoutes = require('./routes/pharmacy/stock');
-const customerorderbillRoutes = require('./routes/orderbill');
-const ordercompleteRoutes = require('./routes/completedorders');
 const addnewadminRoutes = require('./routes/admin/addAdmin');
 const handlemedicineRoutes = require('./routes/admin/handlemedicine');
 
@@ -54,7 +55,7 @@ app.use('/api', pharmacystockRoutes);
 app.use('/api', customerorderbillRoutes);
 app.use('/api', ordercompleteRoutes);
 app.use('/api', handlemedicineRoutes);
-
+app.use('/api', findpharmacyRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
