@@ -13,16 +13,17 @@ const ordercompleteRoutes = require('./routes/completedorders');
 const customerorderbillRoutes = require('./routes/orderbill');
 const orderRoutes = require('./routes/order');
 const findpharmacyRoutes = require('./routes/findpharmacy');
+
 const pharmacyRoutes = require('./routes/pharmacy/auth');
 const pharmacyorderRoutes = require('./routes/pharmacy/order');
 const pharmacystockRoutes = require('./routes/pharmacy/stock');
 const pharmacyorderbillRoutes = require('./routes/pharmacy/orderbill');
+
 const adminRoutes = require('./routes/admin/auth');
 const adminpharmacyhandlingRoutes = require('./routes/admin/handlingpharmacy');
 const addnewadminRoutes = require('./routes/admin/addAdmin');
 const handlemedicineRoutes = require('./routes/admin/handlemedicine');
-
-
+const adminuserprofileRoutes = require('./routes/admin/userprofile');
 
 env.config();
 app.use(cors());
@@ -56,6 +57,7 @@ app.use('/api', customerorderbillRoutes);
 app.use('/api', ordercompleteRoutes);
 app.use('/api', handlemedicineRoutes);
 app.use('/api', findpharmacyRoutes);
+app.use('/api', adminuserprofileRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
