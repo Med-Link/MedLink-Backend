@@ -1,22 +1,22 @@
 const jwt = require('jsonwebtoken');
 
-const pool = require('../../db/db');
+const pool = require('../db/db');
 
 exports.viewprofile = async (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
-  const pharmacyid = decoded.payload.id;
+  const customerid = decoded.payload.id;
 
   try {
-    const pharmacy = await pool.query('SELECT name, email, contactNumber, pharmacyid FROM public.pharmacy WHERE pharmacy.pharmacyid = $1',
-      [pharmacyid]);
+    const customer = await pool.query('SELECT firstName, lastName, email, customerid FROM public.customer WHERE customer.customerid = $1',
+      [customerid]);
 
-    const result = pharmacy.rows;
+    const result = customer.rows;
 
-    if (pharmacy) {
+    if (customer) {
       return res.status(201).json({
-        message: 'pharmacy profile listed success',
+        message: 'customer profile listed success',
         result,
       });
     }
