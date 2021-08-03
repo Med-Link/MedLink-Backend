@@ -18,6 +18,7 @@ const pharmacyRoutes = require('./routes/pharmacy/auth');
 const pharmacyorderRoutes = require('./routes/pharmacy/order');
 const pharmacystockRoutes = require('./routes/pharmacy/stock');
 const pharmacyorderbillRoutes = require('./routes/pharmacy/orderbill');
+const pharmacyuserprofileRoutes = require('./routes/pharmacy/userprofile');
 
 const adminRoutes = require('./routes/admin/auth');
 const adminpharmacyhandlingRoutes = require('./routes/admin/handlingpharmacy');
@@ -58,6 +59,7 @@ app.use('/api', ordercompleteRoutes);
 app.use('/api', handlemedicineRoutes);
 app.use('/api', findpharmacyRoutes);
 app.use('/api', adminuserprofileRoutes);
+app.use('/api', pharmacyuserprofileRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
