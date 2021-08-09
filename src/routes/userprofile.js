@@ -6,7 +6,9 @@ const { viewprofile } = require('../controller/userprofile');
 // const { isRequestValidated, validateSigninRequest } = require('../../validators/auth');
 
 // router.post('/admin/addnewAdmin', validateSigninRequest, isRequestValidated, addnewAdmin);
-router.get('/viewprofile', viewprofile);
+// router.get('/viewprofile', viewprofile);
+router.get('/viewprofile', requireSignin, adminMiddleware, viewprofile);
+
 
 // router.post('/admin/signup', validateSignupRequest, isRequestValidated, signup);
 

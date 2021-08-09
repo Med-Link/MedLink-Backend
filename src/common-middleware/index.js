@@ -47,8 +47,9 @@ exports.uploadpS3 = multer({
 
 // eslint-disable-next-line consistent-return
 exports.requireSignin = (req, res, next) => {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(' ')[1];
+  console.log(req.cookies);
+  if (req.cookies.token) {
+    const token = req.cookies.token;
     const user = jwt.verify(token, process.env.JWT_SECRET);
     req.user = user;
   } else {
@@ -63,8 +64,8 @@ exports.adminMiddleware = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
-  const userrole = decoded.payload.role;
-  // console.log(customerrole);
+  const userrole = decoded.payload.roleco;
+  console.log(userrole);
   if (userrole !== 'admin') {
     return res.status(400).json({ message: 'Access Denied' });
   }

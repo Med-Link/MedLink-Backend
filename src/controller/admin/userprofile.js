@@ -3,11 +3,12 @@ const jwt = require('jsonwebtoken');
 const pool = require('../../db/db');
 
 exports.viewprofile = async (req, res) => {
+  console.log(req.headers.authorization);
   const token = req.headers.authorization.split(' ')[1];
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
   const adminid = decoded.payload.id;
-
+  
   try {
     const admin = await pool.query('SELECT firstName, lastName, email, adminid FROM public.admin WHERE admin.adminid = $1',
       [adminid]);
