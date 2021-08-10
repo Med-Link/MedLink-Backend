@@ -48,8 +48,8 @@ exports.uploadpS3 = multer({
 // eslint-disable-next-line consistent-return
 exports.requireSignin = (req, res, next) => {
   console.log(req.cookies);
-  if (req.cookies.token) {
-    const token = req.cookies.token;
+  if (req.headers.authorization) {
+    const token = req.headers.authorization.split(" ")[1];
     const user = jwt.verify(token, process.env.JWT_SECRET);
     req.user = user;
   } else {
@@ -64,9 +64,9 @@ exports.adminMiddleware = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
-  const userrole = decoded.payload.roleco;
-  console.log(userrole);
-  if (userrole !== 'admin') {
+  const role = decoded.payload.role;
+  console.log(role);
+  if (role !== 'admin') {
     return res.status(400).json({ message: 'Access Denied' });
   }
   next();
@@ -77,9 +77,9 @@ exports.customerMiddleware = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
-  const customerrole = decoded.payload.role;
+  const role = decoded.payload.role;
   // console.log(customerrole);
-  if (customerrole !== 'customer') {
+  if (role !== 'customer') {
     return res.status(400).json({ message: 'Access Denied' });
   }
   next();
@@ -90,9 +90,9 @@ exports.pharmacyMiddleware = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
-  const userrole = decoded.payload.role;
+  const role = decoded.payload.role;
   // console.log(customerrole);
-  if (userrole !== 'pharmacy') {
+  if (role !== 'pharmacy') {
     return res.status(400).json({ message: 'Access Denied' });
   }
   next();
