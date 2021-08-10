@@ -65,7 +65,7 @@ exports.adminMiddleware = (req, res, next) => {
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
   const role = decoded.payload.role;
-  console.log(role);
+  // console.log(role);
   if (role !== 'admin') {
     return res.status(400).json({ message: 'Access Denied' });
   }

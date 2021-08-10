@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const pool = require('../../db/db');
 
 exports.viewprofile = async (req, res) => {
-  console.log(req.headers.authorization);
+  // console.log(req.headers.authorization);
   const token = req.headers.authorization.split(' ')[1];
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
@@ -16,7 +16,7 @@ exports.viewprofile = async (req, res) => {
     const result = admin.rows;
 
     if (admin) {
-      return res.status(201).json({
+      return res.status(200).json({
         message: 'admin profile listed success',
         result,
       });
