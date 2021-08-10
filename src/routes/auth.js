@@ -12,7 +12,7 @@ router.post('/signin', validateSigninRequest, isRequestValidated, signin);
 router.post('/forgotpassword', forgotpassword);
 router.put('/resetpassword', resetpassword);
 router.post('/verifyemail', verifyemail);
-router.post('/signout', requireSignin, signout);
+router.post('/signout', signout);
 
 // router.post('/profile', requireSignin,(req,res)=>{
 //       res.status(200).json({ user:'profile'})
