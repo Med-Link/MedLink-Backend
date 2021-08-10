@@ -7,7 +7,7 @@ const { isRequestValidated, validateSigninRequest, validateSignupRequestpharm } 
 
 router.post('/pharmacy/signin', validateSigninRequest, isRequestValidated, signin);
 router.post('/pharmacy/signup', uploadpS3.array('registrationDocs'), validateSignupRequestpharm, isRequestValidated, signup);
-router.post('/pharmacy/signout', requireSignin, signout);
+router.post('/pharmacy/signout', signout);
 
 // router.post('/profile', requireSignin,(req,res)=>{
 //       res.status(200).json({ user:'profile'})
