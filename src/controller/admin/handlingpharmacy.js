@@ -92,3 +92,20 @@ exports.rejectpharmacy = async (req, res) => {
   }
   return res.status(401).json({ error: 'Server error' });
 };
+
+exports.viewpharmacyrequests = async (req, res) => {
+  const requests = await pool.query('SELECT * FROM public.pharmacy WHERE activestatus = $1', [
+    0,
+  ]);
+  if (requests.rows.length === 0) {
+    return res.status(401).json('server error');
+  }
+  const result = requests.rows;
+  if (requests) {
+    return res.status(200).json({
+      message: 'Pharmacy signup request listed success',
+      result,
+    });
+  }
+  return res.status(401).json({ error: 'Server error' });
+};
