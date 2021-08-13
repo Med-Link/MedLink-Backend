@@ -6,6 +6,6 @@ const { requireSignin, adminMiddleware } = require('../../common-middleware');
 
 router.post('/admin/acceptpharmacy', requireSignin, adminMiddleware, acceptpharmacy);
 router.post('/admin/rejectpharmacy', requireSignin, adminMiddleware, rejectpharmacy);
-router.post('/admin/viewpharmacyrequests', requireSignin, adminMiddleware, viewpharmacyrequests);
+router.get('/admin/viewpharmacyrequests', requireSignin, adminMiddleware, viewpharmacyrequests);
 
 module.exports = router;

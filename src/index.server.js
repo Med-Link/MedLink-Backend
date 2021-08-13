@@ -25,6 +25,8 @@ const adminpharmacyhandlingRoutes = require('./routes/admin/handlingpharmacy');
 const addnewadminRoutes = require('./routes/admin/addAdmin');
 const handlemedicineRoutes = require('./routes/admin/handlemedicine');
 const adminuserprofileRoutes = require('./routes/admin/userprofile');
+const admindashboardRoutes = require('./routes/admin/dashboard');
+
 
 env.config();
 app.use(cors());
@@ -60,6 +62,8 @@ app.use('/api', handlemedicineRoutes);
 app.use('/api', findpharmacyRoutes);
 app.use('/api', adminuserprofileRoutes);
 app.use('/api', pharmacyuserprofileRoutes);
+app.use('/api', admindashboardRoutes);
+
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
