@@ -1,11 +1,11 @@
 const express = require('express');
 const { requireSignin, adminMiddleware } = require('../../common-middleware');
-const { countcustomer } = require('../../controller/admin/dashboard');
+const { countcustomer, countpharmacy } = require('../../controller/admin/dashboard');
 
 const router = express.Router();
 // const { isRequestValidated, validateSigninRequest } = require('../../validators/auth');
 
 // router.post('/admin/addnewAdmin', validateSigninRequest, isRequestValidated, addnewAdmin);
-router.get('/admin/countcustomer', countcustomer);
-// router.get('/admin/viewallmedicine', requireSignin, adminMiddleware, viewallmedicine);
+router.get('/admin/countcustomer', requireSignin, adminMiddleware, countcustomer);
+router.get('/admin/countpharmacy', requireSignin, adminMiddleware, countpharmacy);
 module.exports = router;
