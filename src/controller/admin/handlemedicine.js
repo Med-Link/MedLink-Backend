@@ -25,7 +25,7 @@ exports.addmedicine = async (req, res) => {
 
 exports.viewallmedicine = async (req, res) => {
   try {
-    const allmedicine = await pool.query('SELECT * FROM public.medicine');
+    const allmedicine = await pool.query('SELECT * FROM public.medicines');
 
     const result = allmedicine.rows;
 
