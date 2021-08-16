@@ -81,7 +81,7 @@ exports.signin = async (req, res) => {
     // if (user.rows[0].verifiedemail === false) {
     //   return res.status(401).json('Please verify your email ');
     // }
-    console.log(user.rows[0].verifiedemail);
+    // console.log(user.rows[0].verifiedemail);
     const validPassword = await bcrypt.compare(
       password,
       user.rows[0].password,
@@ -105,7 +105,7 @@ exports.signin = async (req, res) => {
 
 exports.signout = (req, res) => {
   // res.clearCookie('token');
-  console.log("kkkkkk");
+  // console.log("kkkkkk");
   res.status(200).json({
     message: 'Signout successfully...!',
   });

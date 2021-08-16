@@ -47,7 +47,7 @@ exports.uploadpS3 = multer({
 
 // eslint-disable-next-line consistent-return
 exports.requireSignin = (req, res, next) => {
-  console.log(req.cookies);
+  // console.log(req.cookies);
   if (req.headers.authorization) {
     const token = req.headers.authorization.split(" ")[1];
     const user = jwt.verify(token, process.env.JWT_SECRET);

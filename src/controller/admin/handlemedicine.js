@@ -3,13 +3,13 @@ const pool = require('../../db/db');
 
 exports.addmedicine = async (req, res) => {
   const {
-    brandname, medname,
+    brand, medname,
   } = req.body;
 
   try {
     const newUser = await pool.query(
-      'INSERT INTO public.medicine ( brandname, medname ) VALUES ($1, $2) RETURNING *',
-      [brandname, medname],
+      'INSERT INTO public.medicines ( brand, medname ) VALUES ($1, $2) RETURNING *',
+      [brand, medname],
     );
 
     if (newUser) {
@@ -47,7 +47,7 @@ exports.deletemedicine = async (req, res) => {
   } = req.body;
 
   try {
-    const medicine = await pool.query('DELETE FROM public.medicine WHERE medid = $1', [
+    const medicine = await pool.query('DELETE FROM public.medicines WHERE medid = $1', [
       medid,
     ]);
 
