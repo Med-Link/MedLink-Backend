@@ -8,16 +8,16 @@ exports.allorderbills = async (req, res) => {
 
   try {
     const getallbills = await pool.query(
-      'SELECT * FROM public.order_medlist WHERE customerid = $1', [
+      'SELECT order_medlist.medlistid, order_medlist.order_reqid, order_medlist.totalprice, order_medlist.pharmacyid, order_medlist.customerid, order_medlist.acceptstatus, pharmacy.name FROM public.order_medlist INNER JOIN public.pharmacy ON order_medlist.pharmacyid = pharmacy.pharmacyid WHERE customerid = $1', [
         customerid,
       ],
     );
-    const { rows } = getallbills;
+    // const { rows } = getallbills;
 
     if (getallbills) {
       return res.status(200).json({
         message: 'all order bills listed success',
-        rows,
+        getallbills,
       });
     }
   } catch (err) {
