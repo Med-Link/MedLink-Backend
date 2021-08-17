@@ -113,3 +113,35 @@ exports.acceptedbills = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.rejectbills = async (req, res) => {
+  // const token = req.headers.authorization.split(' ')[1];
+  // const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  // const customerid = decoded.payload.id;
+  const {
+    medlistid,
+
+  } = req.body;
+
+  try {
+    const deleteitemlist = await pool.query(
+      'DELETE FROM list_items WHERE medlistid = $1', [
+        medlistid,
+      ],
+    );
+    const rejectorderlist = await pool.query(
+      'DELETE FROM order_medlist WHERE medlistid = $1', [
+        medlistid,
+      ],
+    );
+
+    if (rejectorderlist && deleteitemlist) {
+      return res.status(200).json({
+        message: 'order bill deleted success',
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
