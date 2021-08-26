@@ -61,3 +61,46 @@ exports.deletemedicine = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.updatemedicine = async (req, res) => {
+  const {
+    medid, newmedname
+  } = req.body;
+
+  try {
+    const medupdate = await pool.query(
+      'UPDATE public.medicines SET medname = $1 WHERE medid = $2',
+      [newmedname, medid],
+    );
+
+    if (medupdate) {
+      return res.status(200).json({
+        message: 'medicine name edited successfully',
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+// exports.viewonemedicine  = (req, res) =>{
+//   const {
+//     medid,
+//   } = req.body;
+
+//   try {
+//     const medicine = await pool.query('SELECT FROM public.medicines WHERE medid = $1', [
+//       medid,
+//     ]);
+
+//     if (viewonemedicine) {
+//       return res.status(201).json({
+//         message: 'medicine found',
+//       });
+//     }
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).send('Server error');
+//   }
+// };
