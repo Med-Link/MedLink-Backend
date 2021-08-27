@@ -37,6 +37,28 @@ exports.pharmacybydistrict = async (req, res) => {
   }
 };
 
+exports.searchmedicine = async (req, res) => {
+  const {
+    typetext,
+  } = req.body;
+  try {
+    const searchmedicine = await pool.query(
+      'SELECT * FROM public.medicines WHERE medicines.medname LIKE $1',
+      [`${typetext}%`],
+    );
+    const result = searchmedicine.rows;
+    // console.log(searchmedicine);
+    if (searchmedicine) {
+      return res.status(201).json({
+        message: 'pharmacies listed success',
+        result,
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
 exports.pharmacybymedicine = async (req, res) => {
   const {
     medname,
