@@ -68,10 +68,11 @@ exports.pharmacybylocation = async (req, res) => {
       WHERE distance <= 500
       LIMIT 15;`,
     );
-    console.log(searchpharmacy);
+    const result = searchpharmacy.rows;
     if (searchpharmacy) {
       return res.status(200).json({
         message: 'pharmacies listed success',
+        result,
       });
     }
   } catch (err) {
