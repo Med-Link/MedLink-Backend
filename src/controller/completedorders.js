@@ -49,9 +49,10 @@ exports.findtotal = async (req, res) => {
     if (distance) {
       return res.status(200).json({
         message: 'pharmacies distance calculated success',
-        totalcost,
+        totalprice,
         deliverycost,
         servicecost,
+        totalcost,
       });
     }
   } catch (err) {
@@ -122,11 +123,11 @@ exports.findtotal = async (req, res) => {
 
 exports.checkout = async (req, res) => {
   const {
-    medlistid, totalcost, deliverycost, servicecost, totalprice,
+    medlistid, totalcost, deliverycost, servicecost, totalprice, contactnumber,
   } = req.body;
 
   const paymentstatus = 1;
-
+  console.log(contactnumber);
   try {
     const checkoutorder = await pool.query(
       'INSERT INTO public.completedorder (medlistid, medlisttotal, deliverycost, servicecost, totalcost, paymentstatus) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
