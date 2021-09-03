@@ -12,7 +12,7 @@ exports.getPharmacyOrder_reqs = async (req, res) => {
 
   try {
     const allOrders = await pool.query(
-      'SELECT * FROM order_req WHERE pharmacyid = $1', [
+      'SELECT * FROM order_req,customers WHERE pharmacyid = $1 AND customers.customerid = order_req.customerid' , [
         pharmacyid,
       ],
     );
