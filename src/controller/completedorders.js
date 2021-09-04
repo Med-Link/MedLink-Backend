@@ -123,7 +123,7 @@ exports.findtotal = async (req, res) => {
 
 exports.completeorder = async (req, res) => {
   const {
-    medlistid, totalcost, deliverycost, servicecost, totalprice,
+    medlistid, totalcost, deliverycost, servicecost, totalprice, address, contactnumber,
   } = req.body;
   const token = req.headers.authorization.split(' ')[1];
 
@@ -131,11 +131,12 @@ exports.completeorder = async (req, res) => {
   const customerid = decoded.payload.id;
 
   const paymentstatus = 0;
-  // console.log(contactnumber, address);
+  console.log(contactnumber);
   try {
     const checkoutorder = await pool.query(
-      'INSERT INTO public.completedorder (medlistid, medlisttotal, deliverycost, servicecost, totalcost, paymentstatus, customerid) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [medlistid, totalprice, deliverycost, servicecost, totalcost, paymentstatus, customerid],
+      'INSERT INTO public.completedorder (medlistid, medlisttotal, deliverycost, servicecost, totalcost, paymentstatus, customerid, address, contactnumber) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+      // eslint-disable-next-line max-len
+      [medlistid, totalprice, deliverycost, servicecost, totalcost, paymentstatus, customerid, address, contactnumber],
     );
     if (checkoutorder) {
       return res.status(201).json({
@@ -157,15 +158,16 @@ exports.checkout = async (req, res) => {
   const paymentstatus = 1;
 
   // eslint-disable-next-line camelcase
-  if (status_code === 2) {
+  if (status_code === '2') {
     try {
       const update = await pool.query(
-        'UPDATE public.completedorder SET paymentstatus = $1 WHERE medlistid = $2', [
+        'UPDATE completedorder SET paymentstatus = $1 WHERE medlistid = $2', [
           paymentstatus, medlistid,
         ],
       );
 
       if (update) {
+        // console.log (update);
         return res.status(200).json({
           message: 'payment succesfull',
         });
@@ -177,7 +179,7 @@ exports.checkout = async (req, res) => {
   } else {
     try {
       const deletecompletedorder = await pool.query(
-        'DELETE FROM public.completedorders WHERE medlistid = $1', [
+        'DELETE FROM completedorder WHERE medlistid = $1', [
           medlistid,
         ],
       );
