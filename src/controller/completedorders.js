@@ -5,6 +5,7 @@ const pool = require('../db/db');
 
 // >30km = 150
 // <30km = 300
+// eslint-disable-next-line consistent-return
 exports.findtotal = async (req, res) => {
   const {
     latitude, longitude, pharmacyid, totalprice,
@@ -44,7 +45,6 @@ exports.findtotal = async (req, res) => {
     const servicecost = Math.ceil(totalprice * 0.05);
     // console.log(typeof(deliverycost))
     const totalcost = (parseInt(totalprice, 10) + deliverycost + servicecost);
-
 
     if (distance) {
       return res.status(200).json({
@@ -121,21 +121,50 @@ exports.findtotal = async (req, res) => {
 //   }
 // };
 
-exports.checkout = async (req, res) => {
+exports.completeorder = async (req, res) => {
   const {
-    medlistid, totalcost, deliverycost, servicecost, totalprice, contactnumber,
+    medlistid, totalcost, deliverycost, servicecost, totalprice,
   } = req.body;
+  const token = req.headers.authorization.split(' ')[1];
 
-  const paymentstatus = 1;
-  console.log(contactnumber);
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const customerid = decoded.payload.id;
+
+  const paymentstatus = 0;
+  // console.log(contactnumber, address);
   try {
     const checkoutorder = await pool.query(
-      'INSERT INTO public.completedorder (medlistid, medlisttotal, deliverycost, servicecost, totalcost, paymentstatus) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [medlistid, totalprice, deliverycost, servicecost, totalcost, paymentstatus],
+      'INSERT INTO public.completedorder (medlistid, medlisttotal, deliverycost, servicecost, totalcost, paymentstatus, customerid) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [medlistid, totalprice, deliverycost, servicecost, totalcost, paymentstatus, customerid],
     );
     if (checkoutorder) {
       return res.status(201).json({
         message: 'payment made success',
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.checkoutsuccess = async (req, res) => {
+  const {
+    medlistid,
+  } = req.body;
+  // console.log(contactnumber, address);
+  const paymentstatus = 1;
+
+  try {
+    const update = await pool.query(
+      'UPDATE public.completedorder SET paymentstatus = $1 WHERE medlistid = $2', [
+        paymentstatus, medlistid,
+      ],
+    );
+
+    if (update) {
+      return res.status(200).json({
+        message: 'payment succesfull',
       });
     }
   } catch (err) {
