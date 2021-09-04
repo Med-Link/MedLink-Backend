@@ -1,5 +1,6 @@
 // const e = require('cors');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 
 const pool = require('../db/db');
 
@@ -165,13 +166,40 @@ exports.checkout = async (req, res) => {
           paymentstatus, medlistid,
         ],
       );
+      const details = await pool.query('SELECT * FROM public.completedorder WHERE paymentstatus = $1 && medlistid = $2',
+        [1, medlistid]);
 
-      if (update) {
-        // console.log (update);
-        return res.status(200).json({
-          message: 'payment succesfull',
-        });
-      }
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'medlinkapp.info@gmail.com',
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+
+      const mailOptions = {
+        from: 'medlinkapp.info@gmail.com',
+        to: process.env.DELIVERY_EMAIL,
+        subject: 'MedLink Account Order Delivery',
+        text: 'Order delivery details are listed',
+        html: `
+        <h2>Order delivery details</h2>
+        <p> address :${details.address} </p> <p>contact number:  ${details.contactnumber} </p> <p>order number:  ${details.orderid} </p>`,
+      };
+
+      const sent = transporter.sendMail(mailOptions, (error) => {
+        if (sent) {
+          return 'order delivery email sent';
+        }
+        return res.status(401).json(error);
+      });
+
+      // if (update) {
+      //   // console.log (update);
+      //   return res.status(200).json({
+      //     message: 'payment succesfull',
+      //   });
+      // }
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
@@ -195,4 +223,3 @@ exports.checkout = async (req, res) => {
     }
   }
 };
-
