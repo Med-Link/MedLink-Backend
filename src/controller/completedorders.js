@@ -148,52 +148,49 @@ exports.completeorder = async (req, res) => {
   }
 };
 
-exports.checkoutsuccess = async (req, res) => {
+exports.checkout = async (req, res) => {
   const {
-    medlistid,
+    // eslint-disable-next-line camelcase
+    medlistid, status_code,
   } = req.body;
   // console.log(contactnumber, address);
   const paymentstatus = 1;
 
-  try {
-    const update = await pool.query(
-      'UPDATE public.completedorder SET paymentstatus = $1 WHERE medlistid = $2', [
-        paymentstatus, medlistid,
-      ],
-    );
+  // eslint-disable-next-line camelcase
+  if (status_code === 2) {
+    try {
+      const update = await pool.query(
+        'UPDATE public.completedorder SET paymentstatus = $1 WHERE medlistid = $2', [
+          paymentstatus, medlistid,
+        ],
+      );
 
-    if (update) {
-      return res.status(200).json({
-        message: 'payment succesfull',
-      });
+      if (update) {
+        return res.status(200).json({
+          message: 'payment succesfull',
+        });
+      }
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
     }
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+  } else {
+    try {
+      const deletecompletedorder = await pool.query(
+        'DELETE FROM public.completedorders WHERE medlistid = $1', [
+          medlistid,
+        ],
+      );
+
+      if (deletecompletedorder) {
+        return res.status(200).json({
+          message: 'completed order deleted',
+        });
+      }
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
   }
 };
 
-exports.checkoutfailed = async (req, res) => {
-  const {
-    medlistid,
-  } = req.body;
-  // console.log(contactnumber, address);
-  // const paymentstatus = 1;
-
-  try {
-    const deletecompletedorder = await pool.query(
-      'DELETE FROM public.completedorders WHERE medlistid = $1', [
-        medlistid,
-      ],
-    );
-
-    if (deletecompletedorder) {
-      return res.status(200).json({
-        message: 'completed order deleted',
-      });
-    }
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-};

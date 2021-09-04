@@ -2,7 +2,7 @@ const express = require('express');
 // eslint-disable-next-line camelcase
 const { requireSignin, customerMiddleware } = require('../common-middleware');
 const {
-  findtotal, completeorder, checkoutsuccess, checkoutfailed,
+  findtotal, completeorder, checkout,
 } = require('../controller/completedorders');
 
 const router = express.Router();
@@ -10,8 +10,8 @@ const router = express.Router();
 // router.post('/order/completeorder', requireSignin, customerMiddleware, completeorder);
 router.post('/order/completeorder', requireSignin, customerMiddleware, completeorder);
 router.post('/order/findtotal', requireSignin, customerMiddleware, findtotal);
-router.post('/order/checkoutsuccess', requireSignin, customerMiddleware, checkoutsuccess);
-router.post('/order/checkoutfailed', requireSignin, customerMiddleware, checkoutfailed);
+router.post('/order/checkout', requireSignin, customerMiddleware, checkout);
+// router.post('/order/checkoutfailed', requireSignin, customerMiddleware, checkoutfailed);
 
 // router.post('/order/acceptorderbill', requireSignin, customerMiddleware, acceptorderbill);
 // router.get('/order/acceptedbills', requireSignin, customerMiddleware, acceptedbills);
