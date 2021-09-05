@@ -5,13 +5,14 @@ const pool = require('../db/db');
 exports.allpharmacies = async (req, res) => {
   try {
     const allpharmacieslist = await pool.query(
-      'SELECT * FROM public.pharmacy',
+      'SELECT * FROM public.pharmacy  WHERE pharmacy.activestatus=true',
     );
+    const result = allpharmacieslist.rows;
 
     if (allpharmacieslist) {
       return res.status(201).json({
         message: 'pharmacies listed success',
-        allpharmacieslist,
+        result,
       });
     }
   } catch (err) {

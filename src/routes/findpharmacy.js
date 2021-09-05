@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post('/order/pharmacybylocation', requireSignin, customerMiddleware, pharmacybylocation);
 router.post('/order/pharmacybymedicine', requireSignin, customerMiddleware, pharmacybymedicine);
-router.post('/order/allpharmacies', requireSignin, customerMiddleware, allpharmacies);
+router.get('/order/allpharmacies', requireSignin, customerMiddleware, allpharmacies);
 router.post('/order/searchmedicine', requireSignin, customerMiddleware, searchmedicine);
 
 module.exports = router;
