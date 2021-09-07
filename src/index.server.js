@@ -19,6 +19,8 @@ const pharmacyorderRoutes = require('./routes/pharmacy/order');
 const pharmacystockRoutes = require('./routes/pharmacy/stock');
 const pharmacyorderbillRoutes = require('./routes/pharmacy/orderbill');
 const pharmacyuserprofileRoutes = require('./routes/pharmacy/userprofile');
+const pharmacycompletedorderRoutes = require('./routes/pharmacy/completedorders');
+
 
 const adminRoutes = require('./routes/admin/auth');
 const adminpharmacyhandlingRoutes = require('./routes/admin/handlingpharmacy');
@@ -63,6 +65,8 @@ app.use('/api', findpharmacyRoutes);
 app.use('/api', adminuserprofileRoutes);
 app.use('/api', pharmacyuserprofileRoutes);
 app.use('/api', admindashboardRoutes);
+app.use('/api', pharmacycompletedorderRoutes);
+
 
 
 app.listen(process.env.PORT, () => {
