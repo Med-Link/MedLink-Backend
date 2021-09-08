@@ -126,3 +126,21 @@ exports.pharmacybymedicine = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.listmedicine = async (req, res) => {
+  try {
+    const allmedicine = await pool.query('SELECT * FROM public.medicines');
+
+    const result = allmedicine.rows;
+
+    if (allmedicine) {
+      return res.status(200).json({
+        message: 'all medicine types listed success',
+        result,
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
