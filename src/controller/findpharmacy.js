@@ -46,7 +46,7 @@ exports.searchpharmacy = async (req, res) => {
 
 exports.pharmacybylocation = async (req, res) => {
   const {
-    latitude, longitude,
+    latitude, longitude, distance,
   } = req.body;
   try {
     const searchpharmacy = await pool.query(
@@ -66,7 +66,7 @@ exports.pharmacybylocation = async (req, res) => {
               )
           as distance FROM public.pharmacy
       ) pharmacy
-      WHERE distance <= 500
+      WHERE distance <= ${distance}
       LIMIT 15;`,
     );
     const result = searchpharmacy.rows;
@@ -110,7 +110,7 @@ exports.pharmacybymedicine = async (req, res) => {
   } = req.body;
   try {
     const searchpharmacy = await pool.query(
-      'SELECT pharmacy.pharmacyid FROM public.pharmacy INNER JOIN public.medicinebatch ON pharmacy.pharmacyid = medicinebatch.pharmacyid INNER JOIN medicines ON medicinebatch.medid = medicines.medid WHERE medicines.medname = $1',
+      'SELECT * FROM public.pharmacy INNER JOIN public.medicinebatch ON pharmacy.pharmacyid = medicinebatch.pharmacyid INNER JOIN medicines ON medicinebatch.medid = medicines.medid WHERE medicines.medname = $1',
       [medname],
     );
     const result = searchpharmacy.fields;
