@@ -107,13 +107,13 @@ exports.searchmedicine = async (req, res) => {
 exports.pharmacybymedicine = async (req, res) => {
   const {
     medname,
-  } = req.body;
+  } = req.query;
   try {
     const searchpharmacy = await pool.query(
       'SELECT * FROM public.pharmacy INNER JOIN public.medicinebatch ON pharmacy.pharmacyid = medicinebatch.pharmacyid INNER JOIN medicines ON medicinebatch.medid = medicines.medid WHERE medicines.medname = $1',
       [medname],
     );
-    const result = searchpharmacy.fields;
+    const result = searchpharmacy.rows;
     // console.log(searchpharmacy);
     if (searchpharmacy) {
       return res.status(200).json({

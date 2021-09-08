@@ -6,7 +6,7 @@ const { allpharmacies, pharmacybymedicine, searchmedicine, pharmacybylocation, l
 const router = express.Router();
 
 router.post('/order/pharmacybylocation', requireSignin, customerMiddleware, pharmacybylocation);
-router.post('/order/pharmacybymedicine', requireSignin, customerMiddleware, pharmacybymedicine);
+router.get('/order/pharmacybymedicine', requireSignin, customerMiddleware, pharmacybymedicine);
 router.get('/order/allpharmacies', requireSignin, customerMiddleware, allpharmacies);
 router.post('/order/searchmedicine', requireSignin, customerMiddleware, searchmedicine);
 router.get('/order/listmedicine', requireSignin, customerMiddleware, listmedicine);
