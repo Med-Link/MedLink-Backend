@@ -6,4 +6,5 @@ const { buyinghistory } = require('../controller/buyinghistory');
 const router = express.Router();
 
 // router.post('/order/completeorder', requireSignin, customerMiddleware, completeorder);
-router.post('/customer/buyinghistory', requireSignin, customerMiddleware, buyinghistory);
+router.get('/buyinghistory', requireSignin, customerMiddleware, buyinghistory);
+module.exports = router;
