@@ -162,3 +162,36 @@ exports.listmedicine = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.viewOutofStock = async (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const pharmacyid = decoded.payload.id;
+
+  // console.log(req);
+  try {
+    const select = await pool.query(
+      ` SELECT * 
+        FROM (  SELECT medicines.medid,medicines.medname,medicines.brand,SUM(medicinebatch.quantity) as qty 
+                FROM medicinebatch,medicines WHERE medicinebatch.medid = medicines.medid AND medicinebatch.pharmacyid =$1 
+                GROUP BY medicines.medid) AS fullqty
+      WHERE qty<=50`, 
+      [
+        pharmacyid,
+      ],
+    );
+    const { rows } = select;
+
+    if (select) {
+      return res.status(201).json({
+        message: 'all Stocks listed success',
+        rows,
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
