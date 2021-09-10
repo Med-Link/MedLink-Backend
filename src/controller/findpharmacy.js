@@ -5,13 +5,14 @@ const pool = require('../db/db');
 exports.allpharmacies = async (req, res) => {
   try {
     const allpharmacieslist = await pool.query(
-      'SELECT * FROM public.pharmacy',
+      'SELECT * FROM public.pharmacy  WHERE pharmacy.activestatus=true',
     );
+    const result = allpharmacieslist.rows;
 
     if (allpharmacieslist) {
       return res.status(201).json({
         message: 'pharmacies listed success',
-        allpharmacieslist,
+        result,
       });
     }
   } catch (err) {
@@ -45,7 +46,7 @@ exports.searchpharmacy = async (req, res) => {
 
 exports.pharmacybylocation = async (req, res) => {
   const {
-    latitude, longitude,
+    latitude, longitude, distance,
   } = req.body;
   try {
     const searchpharmacy = await pool.query(
@@ -65,7 +66,7 @@ exports.pharmacybylocation = async (req, res) => {
               )
           as distance FROM public.pharmacy
       ) pharmacy
-      WHERE distance <= 500
+      WHERE distance <= ${distance}
       LIMIT 15;`,
     );
     const result = searchpharmacy.rows;
@@ -106,17 +107,35 @@ exports.searchmedicine = async (req, res) => {
 exports.pharmacybymedicine = async (req, res) => {
   const {
     medname,
-  } = req.body;
+  } = req.query;
   try {
     const searchpharmacy = await pool.query(
-      'SELECT pharmacy.pharmacyid FROM public.pharmacy INNER JOIN public.medicinebatch ON pharmacy.pharmacyid = medicinebatch.pharmacyid INNER JOIN medicines ON medicinebatch.medid = medicines.medid WHERE medicines.medname = $1',
+      'SELECT * FROM public.pharmacy INNER JOIN public.medicinebatch ON pharmacy.pharmacyid = medicinebatch.pharmacyid INNER JOIN medicines ON medicinebatch.medid = medicines.medid WHERE medicines.medname = $1',
       [medname],
     );
-    const result = searchpharmacy.fields;
+    const result = searchpharmacy.rows;
     // console.log(searchpharmacy);
     if (searchpharmacy) {
       return res.status(200).json({
         message: 'pharmacies listed success',
+        result,
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.listmedicine = async (req, res) => {
+  try {
+    const allmedicine = await pool.query('SELECT * FROM public.medicines');
+
+    const result = allmedicine.rows;
+
+    if (allmedicine) {
+      return res.status(200).json({
+        message: 'all medicine types listed success',
         result,
       });
     }

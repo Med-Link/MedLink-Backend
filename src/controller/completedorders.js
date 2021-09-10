@@ -1,10 +1,12 @@
 // const e = require('cors');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 
 const pool = require('../db/db');
 
 // >30km = 150
 // <30km = 300
+// eslint-disable-next-line consistent-return
 exports.findtotal = async (req, res) => {
   const {
     latitude, longitude, pharmacyid, totalprice,
@@ -44,7 +46,6 @@ exports.findtotal = async (req, res) => {
     const servicecost = Math.ceil(totalprice * 0.05);
     // console.log(typeof(deliverycost))
     const totalcost = (parseInt(totalprice, 10) + deliverycost + servicecost);
-
 
     if (distance) {
       return res.status(200).json({
@@ -121,17 +122,27 @@ exports.findtotal = async (req, res) => {
 //   }
 // };
 
-exports.checkout = async (req, res) => {
+exports.completeorder = async (req, res) => {
   const {
-    medlistid, totalcost, deliverycost, servicecost, totalprice, contactnumber,
+    medlistid, totalcost, deliverycost, servicecost, totalprice, address, contactnumber,
   } = req.body;
+  const token = req.headers.authorization.split(' ')[1];
 
-  const paymentstatus = 1;
-  console.log(contactnumber);
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const customerid = decoded.payload.id;
+
+  const paymentstatus = 0;
+  const pharmacy = await pool.query(
+    'SELECT pharmacyid FROM order_medlist WHERE medlistid = $1', [
+      medlistid,
+    ],
+  );
+  const { pharmacyid } = pharmacy.rows[0];
   try {
     const checkoutorder = await pool.query(
-      'INSERT INTO public.completedorder (medlistid, medlisttotal, deliverycost, servicecost, totalcost, paymentstatus) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [medlistid, totalprice, deliverycost, servicecost, totalcost, paymentstatus],
+      'INSERT INTO public.completedorder (medlistid, medlisttotal, deliverycost, servicecost, totalcost, paymentstatus, customerid, address, contactnumber, pharmacyid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
+      // eslint-disable-next-line max-len
+      [medlistid, totalprice, deliverycost, servicecost, totalcost, paymentstatus, customerid, address, contactnumber, pharmacyid],
     );
     if (checkoutorder) {
       return res.status(201).json({
@@ -141,5 +152,79 @@ exports.checkout = async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
+  }
+};
+
+exports.checkout = async (req, res) => {
+  const {
+    // eslint-disable-next-line camelcase
+    medlistid, status_code,
+  } = req.body;
+  // console.log(contactnumber, address);
+  const paymentstatus = 1;
+
+  // eslint-disable-next-line camelcase
+  if (status_code === '2') {
+    try {
+      const update = await pool.query(
+        'UPDATE completedorder SET paymentstatus = $1 WHERE medlistid = $2', [
+          paymentstatus, medlistid,
+        ],
+      );
+      const details = await pool.query('SELECT * FROM public.completedorder WHERE paymentstatus = $1 && medlistid = $2',
+        [1, medlistid]);
+
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'medlinkapp.info@gmail.com',
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+
+      const mailOptions = {
+        from: 'medlinkapp.info@gmail.com',
+        to: process.env.DELIVERY_EMAIL,
+        subject: 'MedLink Account Order Delivery',
+        text: 'Order delivery details are listed',
+        html: `
+        <h2>Order delivery details</h2>
+        <p> address :${details.address} </p> <p>contact number:  ${details.contactnumber} </p> <p>order number:  ${details.orderid} </p>`,
+      };
+
+      const sent = transporter.sendMail(mailOptions, (error) => {
+        if (sent) {
+          return 'order delivery email sent';
+        }
+        return res.status(401).json(error);
+      });
+
+      // if (update) {
+      //   // console.log (update);
+      //   return res.status(200).json({
+      //     message: 'payment succesfull',
+      //   });
+      // }
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
+  } else {
+    try {
+      const deletecompletedorder = await pool.query(
+        'DELETE FROM completedorder WHERE medlistid = $1', [
+          medlistid,
+        ],
+      );
+
+      if (deletecompletedorder) {
+        return res.status(200).json({
+          message: 'completed order deleted',
+        });
+      }
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
   }
 };

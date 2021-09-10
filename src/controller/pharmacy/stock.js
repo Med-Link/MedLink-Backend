@@ -68,7 +68,7 @@ exports.deletestock = async (req, res) => {
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
   const pharmacyid = decoded.payload.id;
 
-  // console.log(pharmacyid);
+  console.log(pharmacyid);
   try {
     const deleterecord = await pool.query(
       'DELETE FROM public.medicinebatch WHERE batchid = $1 AND pharmacyid = $2', [
@@ -137,6 +137,24 @@ exports.viewsinglestock = async (req, res) => {
       return res.status(201).json({
         message: 'Single Stocks listed success',
         rows,
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.listmedicine = async (req, res) => {
+  try {
+    const allmedicine = await pool.query('SELECT * FROM public.medicines');
+
+    const result = allmedicine.rows;
+
+    if (allmedicine) {
+      return res.status(200).json({
+        message: 'all medicine types listed success',
+        result,
       });
     }
   } catch (err) {
