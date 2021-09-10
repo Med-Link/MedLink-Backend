@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('/pharmacy/addstock', requireSignin, pharmacyMiddleware, addstock);
 router.post('/pharmacy/updatestock', requireSignin, pharmacyMiddleware, updatestock);
-router.delete('/pharmacy/deletestock', requireSignin, pharmacyMiddleware, deletestock);
+router.post('/pharmacy/deletestock', requireSignin, pharmacyMiddleware, deletestock);
 router.get('/pharmacy/viewallstock', requireSignin, pharmacyMiddleware, viewallstock);
 router.post('/pharmacy/viewsinglestock', requireSignin, pharmacyMiddleware, viewsinglestock);
 router.get('/pharmacy/listmedicine', requireSignin, pharmacyMiddleware, listmedicine);
