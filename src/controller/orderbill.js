@@ -35,7 +35,6 @@ exports.singleorderbill = async (req, res) => {
     medlistid,
 
   } = req.body;
-
   try {
     const getorderbill = await pool.query(
       'SELECT order_medlist.order_reqid, order_medlist.medlistid, order_medlist.totalprice, order_medlist.pharmacyid, order_medlist.acceptstatus, list_items.quantity, list_items.price, medicinebatch.batchid, medicines.medname, medicines.medid FROM public.order_medlist INNER JOIN public.list_items ON order_medlist.medlistid = list_items.medlistid INNER JOIN public.medicinebatch ON list_items.batchid = medicinebatch.batchid INNER JOIN public.medicines ON medicinebatch.medid = medicines.medid WHERE order_medlist.medlistid = $1 AND order_medlist.customerid = $2', [
@@ -44,7 +43,6 @@ exports.singleorderbill = async (req, res) => {
       ],
     );
     const { rows } = getorderbill;
-    // console.log(getorderbill);
     if (getorderbill) {
       return res.status(200).json({
         message: 'order bill listed success',

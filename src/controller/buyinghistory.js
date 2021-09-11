@@ -10,7 +10,7 @@ exports.buyinghistory = async (req, res) => {
 
   try {
     const getorderhistory = await pool.query(
-      'SELECT * FROM public.completedorder WHERE customerid = $1 AND paymentstatus = $2', [
+      'SELECT * FROM public.completedorder INNER JOIN public.pharmacy ON completedorder.pharmacyid = pharmacy.pharmacyid WHERE customerid = $1 AND paymentstatus = $2', [
         customerid, true,
       ],
     );
