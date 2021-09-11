@@ -1,7 +1,7 @@
 const express = require('express');
 const { requireSignin, pharmacyMiddleware } = require('../../common-middleware');
 const {
-  addstock, updatestock, deletestock, viewallstock, viewsinglestock, listmedicine
+  addstock, updatestock, deletestock, viewallstock, viewsinglestock, listmedicine, viewOutofStock
 } = require('../../controller/pharmacy/stock');
 
 const router = express.Router();
@@ -12,5 +12,6 @@ router.post('/pharmacy/deletestock', requireSignin, pharmacyMiddleware, deletest
 router.get('/pharmacy/viewallstock', requireSignin, pharmacyMiddleware, viewallstock);
 router.post('/pharmacy/viewsinglestock', requireSignin, pharmacyMiddleware, viewsinglestock);
 router.get('/pharmacy/listmedicine', requireSignin, pharmacyMiddleware, listmedicine);
+router.get('/pharmacy/viewoutofstock', requireSignin, pharmacyMiddleware, viewOutofStock);
 
 module.exports = router;
