@@ -21,7 +21,7 @@ exports.uploadS3 = multer({
   storage: multerS3({
     s3,
     bucket: bucketname,
-    // acl: 'public-read',
+    acl: 'public-read',
     metadata(req, file, cb) {
       cb(null, { fieldName: file.fieldname });
     },
@@ -35,7 +35,7 @@ exports.uploadpS3 = multer({
   storage: multerS3({
     s3,
     bucket: bucketname1,
-    // acl: 'public-read',
+    acl: 'public-read',
     metadata(req, file, cb) {
       cb(null, { fieldName: file.fieldname });
     },
@@ -49,7 +49,7 @@ exports.uploadpS3 = multer({
 exports.requireSignin = (req, res, next) => {
   // console.log(req.cookies);
   if (req.headers.authorization) {
-    const token = req.headers.authorization.split(" ")[1];
+    const token = req.headers.authorization.split(' ')[1];
     const user = jwt.verify(token, process.env.JWT_SECRET);
     req.user = user;
   } else {
