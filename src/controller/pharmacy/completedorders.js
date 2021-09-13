@@ -34,7 +34,7 @@ exports.viewallcloseddeals = async (req, res) => {
     const pharmacyid = decoded.payload.id;
   
     try {
-      const alldeals = await pool.query('SELECT count(orderid) as completeOrderCount FROM public.completedorder, public.order_medlist, public.customers WHERE completedorder.orderid=order_medlist.order_reqid AND order_medlist.customerid=customers.customerid AND pharmacyid = $1', 
+      const alldeals = await pool.query('SELECT count(orderid) FROM public.completedorder, public.order_medlist, public.customers WHERE completedorder.orderid=order_medlist.order_reqid AND order_medlist.customerid=customers.customerid AND pharmacyid = $1', 
       [pharmacyid]);
   
       const result = alldeals.rows;
