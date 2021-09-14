@@ -10,7 +10,7 @@ const pool = require('../../db/db');
 exports.signup = async (req, res) => {
   // User.findOne({ email: req.body.email }).exec((error, userdet) => {
   const {
-    email, name, contactNumber, password,
+    email, name, contactNumber, password, latitude, longitude, city,
   } = req.body;
 
   try {
@@ -61,8 +61,8 @@ exports.signup = async (req, res) => {
     names = regDocs.map((item) => item.img);
 
     const newUser = await pool.query(
-      'INSERT INTO public.pharmacy ( email, name, contactnumber, activestatus, verifiedemail, document1, document2, document3, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
-      [email, name, contactNumber, activeStatus, verifiedemail, names[0], names[1], names[2], bcryptPassword],
+      'INSERT INTO public.pharmacy ( email, name, contactnumber, activestatus, verifiedemail, document1, document2, document3, password, latitude, longitude, city) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
+      [email, name, contactNumber, activeStatus, verifiedemail, names[0], names[1], names[2], bcryptPassword, latitude, longitude,city],
     );
     // const jwtToken = jwtGenerator(newUser.rows[0].user_id);
     if (newUser) {
