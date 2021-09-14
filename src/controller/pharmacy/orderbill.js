@@ -19,6 +19,15 @@ exports.sendorderbill = async (req, res) => {
 
   // eslint-disable-next-line no-plusplus
   try {
+    const status = 'accepted';
+    const acceptOrder = await pool.query(
+      'UPDATE public.order_req SET acceptstatus = $1 WHERE id = $2', [
+        status, orderreqid,
+      ],
+    );
+    if (!acceptOrder) {
+      res.status(400).send('accepting order error');
+    }
     const sendmedlist = await pool.query(
       'INSERT INTO public.order_medlist( order_reqid, totalprice, pharmacyid, customerid, acceptstatus) VALUES ($1, $2, $3, $4, $5) RETURNING *',
       [orderreqid, totalprice, pharmacyid, customerid, acceptstatus],

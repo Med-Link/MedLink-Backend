@@ -9,11 +9,11 @@ exports.getPharmacyOrder_reqs = async (req, res) => {
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
   const pharmacyid = decoded.payload.id;
-
+  const status = 'rejected';
   try {
     const allOrders = await pool.query(
-      'SELECT * FROM order_req WHERE pharmacyid = $1', [
-        pharmacyid,
+      'SELECT * FROM order_req WHERE pharmacyid = $1 AND acceptstatus != $2', [
+        pharmacyid, status,
       ],
     );
 
@@ -46,7 +46,7 @@ exports.getPharmacyOrder_req = async (req, res) => {
 
   try {
     const singleOrder = await pool.query(
-      'SELECT * FROM order_req WHERE pharmacyid = $1 AND id = $2', [
+      'SELECT * FROM order_req WHERE order_req.pharmacyid = $1 AND order_req.id = $2', [
         pharmacyid, orderreqid,
       ],
     );
@@ -72,11 +72,11 @@ exports.rejectOrder_req = async (req, res) => {
     rejectmessage,
   } = req.body;
 
-  const status = 'reject';
+  const status = 'rejected';
 
   try {
     const rejectOrder = await pool.query(
-      'UPDATE public.order_req SET acceptstatus = $1 AND SET rejectmessage = $2 WHERE id = $3', [
+      'UPDATE public.order_req SET acceptstatus = $1, rejectmessage = $2 WHERE id = $3', [
         status, rejectmessage, orderreqid,
       ],
     );
