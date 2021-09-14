@@ -94,3 +94,31 @@ exports.rejectOrder_req = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.countAcceptedOrders = async (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const pharmacyid = decoded.payload.id;
+
+  try {
+    const acceptcount = await pool.query(
+      "SELECT COUNT(id) FROM order_req WHERE acceptstatus='1' AND pharmacyid = $1", [
+        pharmacyid,
+      ],
+    );
+      console.log(acceptcount);
+    if (acceptcount.rows.length === 0) {
+      return res.status(401).json('No rows to show');
+    }
+
+    if (acceptcount) {
+      return res.status(201).json({
+        message: 'orders listed success',
+        acceptcount,
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
