@@ -68,17 +68,18 @@ exports.deletestock = async (req, res) => {
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
   const pharmacyid = decoded.payload.id;
 
-  console.log(pharmacyid);
+  console.log(pharmacyid, batchid);
   try {
     const deleterecord = await pool.query(
-      'DELETE FROM public.medicinebatch WHERE batchid = $1 AND pharmacyid = $2', [
-        batchid, pharmacyid,
+      'UPDATE public.medicinebatch SET activestatus = $1 WHERE batchid = $2 AND pharmacyid = $3', [
+        false, batchid, pharmacyid,
       ],
     );
 
     if (deleterecord) {
       return res.status(201).json({
         message: 'Stock record deleted success',
+        // res,
       });
     }
   } catch (err) {
