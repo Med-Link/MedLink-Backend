@@ -6,7 +6,7 @@ const { requireSignin, customerMiddleware } = require('../common-middleware');
 const router = express.Router();
 
 router.get('/order/allorderbills', requireSignin, customerMiddleware, allorderbills);
-router.post('/order/singleorderbill', requireSignin, customerMiddleware, singleorderbill);
+router.post('/order/singleorderbill', requireSignin, singleorderbill);
 router.post('/order/acceptorderbill', requireSignin, customerMiddleware, acceptorderbill);
 router.get('/order/acceptedbills', requireSignin, customerMiddleware, acceptedbills);
 router.post('/order/rejectbill', requireSignin, customerMiddleware, rejectbills);
