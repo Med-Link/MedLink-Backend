@@ -97,8 +97,8 @@ exports.viewallstock = async (req, res) => {
   // console.log(req);
   try {
     const select = await pool.query(
-      'SELECT * FROM public.medicinebatch, public.medicines WHERE medicinebatch.medid = medicines.medid AND pharmacyid = $1', [
-        pharmacyid,
+      'SELECT * FROM public.medicinebatch, public.medicines WHERE medicinebatch.medid = medicines.medid AND pharmacyid = $1 AND activestatus =$2', [
+        pharmacyid, true,
       ],
     );
     const { rows } = select;
