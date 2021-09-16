@@ -27,9 +27,9 @@ exports.allorderbills = async (req, res) => {
 };
 
 exports.singleorderbill = async (req, res) => {
-  const token = req.headers.authorization.split(' ')[1];
-  const decoded = jwt.decode(token, process.env.JWT_SECRET);
-  const customerid = decoded.payload.id;
+  // const token = req.headers.authorization.split(' ')[1];
+  // const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  // const customerid = decoded.payload.id;
 
   const {
     medlistid,
@@ -37,9 +37,9 @@ exports.singleorderbill = async (req, res) => {
   } = req.body;
   try {
     const getorderbill = await pool.query(
-      'SELECT order_medlist.order_reqid, order_medlist.medlistid, order_medlist.totalprice, order_medlist.pharmacyid, order_medlist.acceptstatus, list_items.quantity, list_items.price, medicinebatch.batchid, medicines.medname, medicines.medid FROM public.order_medlist INNER JOIN public.list_items ON order_medlist.medlistid = list_items.medlistid INNER JOIN public.medicinebatch ON list_items.batchid = medicinebatch.batchid INNER JOIN public.medicines ON medicinebatch.medid = medicines.medid WHERE order_medlist.medlistid = $1 AND order_medlist.customerid = $2', [
+      'SELECT order_medlist.order_reqid, order_medlist.medlistid, order_medlist.totalprice, order_medlist.pharmacyid, order_medlist.acceptstatus, list_items.quantity, list_items.price, medicinebatch.batchid, medicines.medname, medicines.medid FROM public.order_medlist INNER JOIN public.list_items ON order_medlist.medlistid = list_items.medlistid INNER JOIN public.medicinebatch ON list_items.batchid = medicinebatch.batchid INNER JOIN public.medicines ON medicinebatch.medid = medicines.medid WHERE order_medlist.medlistid = $1 ', [
         medlistid,
-        customerid,
+        // customerid,
       ],
     );
     const { rows } = getorderbill;

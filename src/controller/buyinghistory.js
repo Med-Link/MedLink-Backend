@@ -16,7 +16,7 @@ exports.buyinghistory = async (req, res) => {
     );
     if (getorderhistory) {
       return res.status(201).json({
-        message: 'order histpory listed',
+        message: 'order history listed',
         getorderhistory,
       });
     }
