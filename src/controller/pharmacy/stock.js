@@ -32,6 +32,32 @@ exports.addstock = async (req, res) => {
   }
 };
 
+exports.addcsv = async (req, res) => {
+  const {
+    csvarray
+  } = req.body;
+  const token = req.headers.authorization.split(' ')[1];
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const pharmacyid = decoded.payload.id;
+
+  try {
+    for (var i = 0; i < (csvarray.length); i++) {
+      const newBatch = await pool.query(
+        'INSERT INTO public.medicinebatch (pharmacyid, medid, quantity, price, expiredate, manufacdate ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+        [pharmacyid, csvarray[i].medid, csvarray[i].quantity, csvarray[i].price, csvarray[i].expiredate, csvarray[i].manufacdate],
+    );
+    if (newBatch) {
+      return res.status(201).json({
+        message: 'CSV file added successfully',
+      });
+    }
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
 exports.updatestock = async (req, res) => {
   const {
     batchid,
