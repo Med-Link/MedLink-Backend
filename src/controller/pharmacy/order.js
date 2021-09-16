@@ -102,7 +102,7 @@ exports.countAcceptedOrders = async (req, res) => {
 
   try {
     const acceptcount = await pool.query(
-      "SELECT COUNT(id) FROM order_req WHERE acceptstatus='1' AND pharmacyid = $1", [
+      "SELECT COUNT(id) FROM order_req WHERE acceptstatus='accepted' AND pharmacyid = $1", [
         pharmacyid,
       ],
     );
