@@ -18,11 +18,11 @@ exports.getPharmacyOrder_reqs = async (req, res) => {
     );
 
     if (allOrders.rows.length === 0) {
-      return res.status(401).json('No rows to show');
+      return res.status(400).json('No rows to show');
     }
 
     if (allOrders) {
-      return res.status(201).json({
+      return res.status(200).json({
         message: 'orders listed success',
         allOrders,
       });
@@ -51,11 +51,11 @@ exports.getPharmacyOrder_req = async (req, res) => {
       ],
     );
     if (singleOrder.rows.length === 0) {
-      return res.status(401).json('No rows to show');
+      return res.status(400).json('No rows to show');
     }
 
     if (singleOrder) {
-      return res.status(201).json({
+      return res.status(200).json({
         message: 'orders listed success',
         singleOrder,
       });
@@ -106,13 +106,13 @@ exports.countAcceptedOrders = async (req, res) => {
         pharmacyid,
       ],
     );
-      console.log(acceptcount);
+      // console.log(acceptcount);
     if (acceptcount.rows.length === 0) {
-      return res.status(401).json('No rows to show');
+      return res.status(400).json('No rows to show');
     }
 
     if (acceptcount) {
-      return res.status(201).json({
+      return res.status(200).json({
         message: 'orders listed success',
         acceptcount,
       });
