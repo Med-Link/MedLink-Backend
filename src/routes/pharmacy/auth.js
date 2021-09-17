@@ -10,7 +10,7 @@ router.post('/pharmacy/signup', uploadpS3.array('registrationDocs'), validateSig
 router.post('/pharmacy/signout', signout);
 router.post('/pharmacy/forgotpassword', forgotpassword);
 router.post('/pharmacy/resetpassword', resetpassword);
-router.post('/verifyemail', verifyemail);
+router.post('/pharmacy/verifyemail', verifyemail);
 
 // router.post('/profile', requireSignin,(req,res)=>{
 //       res.status(200).json({ user:'profile'})
