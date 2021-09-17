@@ -132,6 +132,7 @@ exports.completeorder = async (req, res) => {
   const customerid = decoded.payload.id;
 
   const paymentstatus = 0;
+  const pharmacypaid = 0;
   const pharmacy = await pool.query(
     'SELECT pharmacyid FROM order_medlist WHERE medlistid = $1', [
       medlistid,
@@ -140,9 +141,9 @@ exports.completeorder = async (req, res) => {
   const { pharmacyid } = pharmacy.rows[0];
   try {
     const checkoutorder = await pool.query(
-      'INSERT INTO public.completedorder (medlistid, medlisttotal, deliverycost, servicecost, totalcost, paymentstatus, customerid, address, contactnumber, pharmacyid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
+      'INSERT INTO public.completedorder (medlistid, medlisttotal, deliverycost, servicecost, totalcost, paymentstatus, customerid, address, contactnumber, pharmacyid, pharmacypaid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
       // eslint-disable-next-line max-len
-      [medlistid, totalprice, deliverycost, servicecost, totalcost, paymentstatus, customerid, address, contactnumber, pharmacyid],
+      [medlistid, totalprice, deliverycost, servicecost, totalcost, paymentstatus, customerid, address, contactnumber, pharmacyid, pharmacypaid],
     );
     if (checkoutorder) {
       return res.status(201).json({
