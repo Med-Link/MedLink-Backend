@@ -136,7 +136,7 @@ exports.forgotpassword = async (req, res) => {
   }
   const payload = { id: user.rows[0].customerid };
   // console.log(user.rows[0].customerid);
-  const token = jwt.sign({ payload }, process.env.PASSWORD_RESET, { noTimestamp: true, expiresIn: '20m' });
+  const token = jwt.sign({ payload }, process.env.PASSWORD_RESET, { noTimestamp: true, expiresIn: '1h' });
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -153,7 +153,7 @@ exports.forgotpassword = async (req, res) => {
     text: 'Click the link below to login to your MedLink account',
     html: `
     <h2>Click the link below to login to your MedLink account</h2>
-    <p> ${process.env.CLIENT_URL}/resetpassword/${token} </p>`,
+    <p> ${process.env.CLIENT_URL}/ResetPassword/${token} </p>`,
   };
 
   const sent = transporter.sendMail(mailOptions, (error, info) => {
@@ -167,7 +167,7 @@ exports.forgotpassword = async (req, res) => {
 exports.resetpassword = async (req, res) => {
   const { resetlink, newpassword } = req.body;
 
-  // console.log(resetlink);
+  console.log(resetlink);
   const verify = jwt.verify(resetlink, process.env.PASSWORD_RESET);
   if (verify) {
     const bcryptPassword = bcrypt.hashSync(newpassword, 10);

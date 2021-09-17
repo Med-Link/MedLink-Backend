@@ -11,7 +11,7 @@ exports.sendorderbill = async (req, res) => {
     medlist,
 
   } = req.body;
-
+  // console.log(req)
   const acceptstatus = 0;
   const token = req.headers.authorization.split(' ')[1];
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
