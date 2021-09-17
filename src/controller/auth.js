@@ -76,11 +76,11 @@ exports.signin = async (req, res) => {
     ]);
     // const role = customer;
     if (user.rows.length === 0) {
-      return res.status(401).json('Invalid Credential');
+      return res.status(400).json('Invalid Credential');
     }
-    // if (user.rows[0].verifiedemail === false) {
-    //   return res.status(401).json('Please verify your email ');
-    // }
+    if (user.rows[0].verifiedemail === false) {
+      return res.status(400).json('Please verify your email ');
+    }
     // console.log(user.rows[0].verifiedemail);
     const validPassword = await bcrypt.compare(
       password,
@@ -88,7 +88,7 @@ exports.signin = async (req, res) => {
     );
     const userdet = user.rows;
     if (!validPassword) {
-      return res.status(401).json('Invalid Credential');
+      return res.status(400).json('Invalid Credential');
     }
     const payload = { id: user.rows[0].customerid, role: 'customer' };
     const token = jwt.sign({ payload }, process.env.JWT_SECRET, { noTimestamp: true, expiresIn: '6h' });
