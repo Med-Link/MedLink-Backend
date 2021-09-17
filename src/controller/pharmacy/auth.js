@@ -89,10 +89,10 @@ exports.signin = async (req, res) => {
     if (user.rows.length === 0) {
       return res.status(400).json('Invalid Credential');
     }
-    if (user.rows[0].activeStatus === 0) {
+    if (user.rows[0].activeStatus === false) {
       return res.status(400).json('Signup request not accepted ');
     }
-    if (user.rows[0].verifiedemail === 0) {
+    if (user.rows[0].verifiedemail === false) {
       return res.status(400).json('Please verify your email ');
     }
     const userdet = user.rows;
