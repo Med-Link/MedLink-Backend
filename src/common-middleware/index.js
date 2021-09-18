@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
@@ -45,7 +46,6 @@ exports.uploadpS3 = multer({
   }),
 });
 
-// eslint-disable-next-line consistent-return
 exports.requireSignin = (req, res, next) => {
   // console.log(req.cookies);
   if (req.headers.authorization) {
@@ -56,42 +56,35 @@ exports.requireSignin = (req, res, next) => {
     return res.status(400).json({ message: 'Authorization required' });
   }
   next();
-
-  // jwt.decode()
 };
-// eslint-disable-next-line consistent-return
+
 exports.adminMiddleware = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
-  const role = decoded.payload.role;
-  // console.log(role);
+  const { role } = decoded.payload;
   if (role !== 'admin') {
     return res.status(400).json({ message: 'Access Denied' });
   }
   next();
 };
 
-// eslint-disable-next-line consistent-return
 exports.customerMiddleware = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
-  const role = decoded.payload.role;
-  // console.log(customerrole);
+  const { role } = decoded.payload;
   if (role !== 'customer') {
     return res.status(400).json({ message: 'Access Denied' });
   }
   next();
 };
 
-// eslint-disable-next-line consistent-return
 exports.pharmacyMiddleware = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
-  const role = decoded.payload.role;
-  // console.log(customerrole);
+  const { role } = decoded.payload;
   if (role !== 'pharmacy') {
     return res.status(400).json({ message: 'Access Denied' });
   }
