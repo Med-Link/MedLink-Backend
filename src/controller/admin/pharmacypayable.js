@@ -2,7 +2,7 @@ const pool = require('../../db/db');
 
 exports.viewpayablepharmacy = async (req, res) => {
   const requests = await pool.query('SELECT pharmacyid, SUM(medlisttotal) FROM completedorder WHERE pharmacypaid = $1 AND paymentstatus = $2 GROUP BY pharmacyid', [
-    true, true,
+    false, true,
   ]);
   if (requests.rows.length === 0) {
     return res.status(400).json('server error');
@@ -30,7 +30,7 @@ exports.pharmacypaid = async (req, res) => {
     );
     if (pharmacypaid) {
       return res.status(200).json({
-        message: 'order bill accepted success',
+        message: 'pharmacy paid success',
         // rows,
 
       });
