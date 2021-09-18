@@ -71,10 +71,10 @@
         }
       }
     },
-    "HelloLogGroup": {
+    "RouteLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/MedlinkBack-end-dev-hello"
+        "LogGroupName": "/aws/lambda/back-end-dev-route"
       }
     },
     "IamRoleLambdaExecution": {
@@ -102,7 +102,7 @@
               "Fn::Join": [
                 "-",
                 [
-                  "MedlinkBack-end",
+                  "back-end",
                   "dev",
                   "lambda"
                 ]
@@ -119,7 +119,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/MedlinkBack-end-dev*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/back-end-dev*:*"
                     }
                   ]
                 },
@@ -130,7 +130,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/MedlinkBack-end-dev*:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/back-end-dev*:*:*"
                     }
                   ]
                 }
@@ -143,7 +143,7 @@
           "Fn::Join": [
             "-",
             [
-              "MedlinkBack-end",
+              "back-end",
               "dev",
               {
                 "Ref": "AWS::Region"
@@ -154,506 +154,20 @@
         }
       }
     },
-    "HelloLambdaFunction": {
+    "RouteLambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/MedlinkBack-end/dev/1627076297564-2021-07-23T21:38:17.564Z/MedlinkBack-end.zip"
+          "S3Key": "serverless/back-end/dev/1631984120578-2021-09-18T16:55:20.578Z/back-end.zip"
         },
-        "Handler": "handler.hello",
+        "Handler": "src/index.server.js",
         "Runtime": "nodejs12.x",
-        "FunctionName": "MedlinkBack-end-dev-hello",
-        "MemorySize": 2048,
-        "Timeout": 15,
-        "Environment": {
-          "Variables": {
-            "0": "P",
-            "1": "O",
-            "2": "R",
-            "3": "T",
-            "4": "=",
-            "5": "4",
-            "6": "0",
-            "7": "0",
-            "8": "0",
-            "9": " ",
-            "10": "M",
-            "11": "O",
-            "12": "N",
-            "13": "G",
-            "14": "O",
-            "15": "_",
-            "16": "D",
-            "17": "B",
-            "18": "_",
-            "19": "U",
-            "20": "S",
-            "21": "E",
-            "22": "R",
-            "23": "=",
-            "24": "r",
-            "25": "o",
-            "26": "o",
-            "27": "t",
-            "28": " ",
-            "29": "M",
-            "30": "O",
-            "31": "N",
-            "32": "G",
-            "33": "O",
-            "34": "_",
-            "35": "D",
-            "36": "B",
-            "37": "_",
-            "38": "P",
-            "39": "A",
-            "40": "S",
-            "41": "S",
-            "42": "W",
-            "43": "O",
-            "44": "R",
-            "45": "D",
-            "46": "=",
-            "47": "u",
-            "48": "c",
-            "49": "s",
-            "50": "c",
-            "51": "1",
-            "52": "2",
-            "53": "3",
-            "54": " ",
-            "55": "M",
-            "56": "O",
-            "57": "N",
-            "58": "G",
-            "59": "O",
-            "60": "_",
-            "61": "D",
-            "62": "B",
-            "63": "_",
-            "64": "D",
-            "65": "A",
-            "66": "T",
-            "67": "A",
-            "68": "B",
-            "69": "A",
-            "70": "S",
-            "71": "E",
-            "72": "=",
-            "73": "M",
-            "74": "e",
-            "75": "d",
-            "76": "L",
-            "77": "i",
-            "78": "n",
-            "79": "k",
-            "80": " ",
-            "81": "J",
-            "82": "W",
-            "83": "T",
-            "84": "_",
-            "85": "S",
-            "86": "E",
-            "87": "C",
-            "88": "R",
-            "89": "E",
-            "90": "T",
-            "91": "=",
-            "92": "M",
-            "93": "E",
-            "94": "D",
-            "95": "L",
-            "96": "I",
-            "97": "N",
-            "98": "K",
-            "99": "S",
-            "100": "E",
-            "101": "C",
-            "102": "R",
-            "103": "E",
-            "104": "T",
-            "105": " ",
-            "106": "P",
-            "107": "A",
-            "108": "S",
-            "109": "S",
-            "110": "W",
-            "111": "O",
-            "112": "R",
-            "113": "D",
-            "114": "_",
-            "115": "R",
-            "116": "E",
-            "117": "S",
-            "118": "E",
-            "119": "T",
-            "120": "=",
-            "121": "M",
-            "122": "E",
-            "123": "D",
-            "124": "L",
-            "125": "I",
-            "126": "N",
-            "127": "K",
-            "128": "R",
-            "129": "E",
-            "130": "S",
-            "131": "E",
-            "132": "T",
-            "133": " ",
-            "134": "C",
-            "135": "L",
-            "136": "I",
-            "137": "E",
-            "138": "N",
-            "139": "T",
-            "140": "_",
-            "141": "U",
-            "142": "R",
-            "143": "L",
-            "144": "=",
-            "145": "h",
-            "146": "t",
-            "147": "t",
-            "148": "p",
-            "149": ":",
-            "150": "/",
-            "151": "/",
-            "152": "l",
-            "153": "o",
-            "154": "c",
-            "155": "a",
-            "156": "l",
-            "157": "h",
-            "158": "o",
-            "159": "s",
-            "160": "t",
-            "161": ":",
-            "162": "3",
-            "163": "0",
-            "164": "0",
-            "165": "0",
-            "166": " ",
-            "167": "E",
-            "168": "M",
-            "169": "A",
-            "170": "I",
-            "171": "L",
-            "172": "_",
-            "173": "P",
-            "174": "A",
-            "175": "S",
-            "176": "S",
-            "177": "W",
-            "178": "O",
-            "179": "R",
-            "180": "D",
-            "181": "=",
-            "182": " ",
-            "183": "M",
-            "184": "e",
-            "185": "d",
-            "186": "l",
-            "187": "i",
-            "188": "n",
-            "189": "k",
-            "190": "1",
-            "191": "2",
-            "192": "3",
-            "193": "\n",
-            "194": "A",
-            "195": "W",
-            "196": "S",
-            "197": "_",
-            "198": "B",
-            "199": "U",
-            "200": "C",
-            "201": "K",
-            "202": "E",
-            "203": "T",
-            "204": "_",
-            "205": "N",
-            "206": "A",
-            "207": "M",
-            "208": "E",
-            "209": "=",
-            "210": "\"",
-            "211": "m",
-            "212": "e",
-            "213": "d",
-            "214": "l",
-            "215": "i",
-            "216": "n",
-            "217": "k",
-            "218": "a",
-            "219": "p",
-            "220": "p",
-            "221": "\"",
-            "222": " ",
-            "223": "A",
-            "224": "W",
-            "225": "S",
-            "226": "_",
-            "227": "B",
-            "228": "U",
-            "229": "C",
-            "230": "K",
-            "231": "E",
-            "232": "T",
-            "233": "_",
-            "234": "R",
-            "235": "E",
-            "236": "G",
-            "237": "I",
-            "238": "O",
-            "239": "N",
-            "240": "=",
-            "241": "\"",
-            "242": "a",
-            "243": "p",
-            "244": "-",
-            "245": "s",
-            "246": "o",
-            "247": "u",
-            "248": "t",
-            "249": "h",
-            "250": "-",
-            "251": "1",
-            "252": "\"",
-            "253": " ",
-            "254": "A",
-            "255": "W",
-            "256": "S",
-            "257": "_",
-            "258": "A",
-            "259": "C",
-            "260": "C",
-            "261": "E",
-            "262": "S",
-            "263": "S",
-            "264": "_",
-            "265": "K",
-            "266": "E",
-            "267": "Y",
-            "268": "=",
-            "269": "\"",
-            "270": "A",
-            "271": "K",
-            "272": "I",
-            "273": "A",
-            "274": "Z",
-            "275": "4",
-            "276": "V",
-            "277": "Y",
-            "278": "W",
-            "279": "X",
-            "280": "4",
-            "281": "X",
-            "282": "G",
-            "283": "5",
-            "284": "L",
-            "285": "2",
-            "286": "D",
-            "287": "B",
-            "288": "E",
-            "289": "3",
-            "290": "\"",
-            "291": " ",
-            "292": "A",
-            "293": "W",
-            "294": "S",
-            "295": "_",
-            "296": "S",
-            "297": "E",
-            "298": "C",
-            "299": "R",
-            "300": "E",
-            "301": "T",
-            "302": "_",
-            "303": "K",
-            "304": "E",
-            "305": "Y",
-            "306": "=",
-            "307": "\"",
-            "308": "f",
-            "309": "B",
-            "310": "B",
-            "311": "L",
-            "312": "b",
-            "313": "1",
-            "314": "i",
-            "315": "z",
-            "316": "v",
-            "317": "P",
-            "318": "8",
-            "319": "k",
-            "320": "U",
-            "321": "l",
-            "322": "8",
-            "323": "M",
-            "324": "B",
-            "325": "c",
-            "326": "R",
-            "327": "v",
-            "328": "G",
-            "329": "A",
-            "330": "4",
-            "331": "p",
-            "332": "2",
-            "333": "h",
-            "334": "F",
-            "335": "H",
-            "336": "l",
-            "337": "d",
-            "338": "A",
-            "339": "B",
-            "340": "x",
-            "341": "t",
-            "342": "H",
-            "343": "n",
-            "344": "X",
-            "345": "q",
-            "346": "p",
-            "347": "a",
-            "348": "\"",
-            "349": "\n",
-            "350": "A",
-            "351": "W",
-            "352": "S",
-            "353": "_",
-            "354": "B",
-            "355": "U",
-            "356": "C",
-            "357": "K",
-            "358": "E",
-            "359": "T",
-            "360": "_",
-            "361": "N",
-            "362": "A",
-            "363": "M",
-            "364": "E",
-            "365": "1",
-            "366": "=",
-            "367": "\"",
-            "368": "m",
-            "369": "e",
-            "370": "d",
-            "371": "l",
-            "372": "i",
-            "373": "n",
-            "374": "k",
-            "375": "p",
-            "376": "h",
-            "377": "a",
-            "378": "r",
-            "379": "m",
-            "380": "a",
-            "381": "c",
-            "382": "y",
-            "383": "\"",
-            "384": " ",
-            "385": "A",
-            "386": "W",
-            "387": "S",
-            "388": "_",
-            "389": "A",
-            "390": "C",
-            "391": "C",
-            "392": "E",
-            "393": "S",
-            "394": "S",
-            "395": "_",
-            "396": "K",
-            "397": "E",
-            "398": "Y",
-            "399": "1",
-            "400": "=",
-            "401": "\"",
-            "402": "A",
-            "403": "K",
-            "404": "I",
-            "405": "A",
-            "406": "Z",
-            "407": "4",
-            "408": "V",
-            "409": "Y",
-            "410": "W",
-            "411": "X",
-            "412": "4",
-            "413": "X",
-            "414": "F",
-            "415": "Y",
-            "416": "2",
-            "417": "Z",
-            "418": "U",
-            "419": "Y",
-            "420": "X",
-            "421": "W",
-            "422": "\"",
-            "423": " ",
-            "424": "A",
-            "425": "W",
-            "426": "S",
-            "427": "_",
-            "428": "S",
-            "429": "E",
-            "430": "C",
-            "431": "R",
-            "432": "E",
-            "433": "T",
-            "434": "_",
-            "435": "K",
-            "436": "E",
-            "437": "Y",
-            "438": "1",
-            "439": "=",
-            "440": "\"",
-            "441": "+",
-            "442": "D",
-            "443": "v",
-            "444": "0",
-            "445": "C",
-            "446": "M",
-            "447": "j",
-            "448": "F",
-            "449": "B",
-            "450": "U",
-            "451": "U",
-            "452": "0",
-            "453": "U",
-            "454": "H",
-            "455": "u",
-            "456": "W",
-            "457": "f",
-            "458": "/",
-            "459": "b",
-            "460": "h",
-            "461": "T",
-            "462": "n",
-            "463": "3",
-            "464": "y",
-            "465": "N",
-            "466": "e",
-            "467": "s",
-            "468": "L",
-            "469": "O",
-            "470": "U",
-            "471": "m",
-            "472": "2",
-            "473": "A",
-            "474": "c",
-            "475": "Y",
-            "476": "L",
-            "477": "e",
-            "478": "V",
-            "479": "j",
-            "480": "6",
-            "481": "\""
-          }
-        },
+        "FunctionName": "back-end-dev-route",
+        "MemorySize": 1024,
+        "Timeout": 6,
         "Role": {
           "Fn::GetAtt": [
             "IamRoleLambdaExecution",
@@ -662,23 +176,23 @@
         }
       },
       "DependsOn": [
-        "HelloLogGroup"
+        "RouteLogGroup"
       ]
     },
-    "HelloLambdaVersionAymjQJH3iEiU42NZYZya6x3rFTzSYI19sN810TW7A": {
+    "RouteLambdaVersionZ52KFdtVUKZRjtpe9dE8Zi8nKTDEUQ6dynB7Tozc": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "HelloLambdaFunction"
+          "Ref": "RouteLambdaFunction"
         },
-        "CodeSha256": "OHyS7F2AUcnmF82jaCDKirYH0uiHTsq6XlgiyHZ5XEY="
+        "CodeSha256": "dpBkkg20tTLxZFuJOFb8w2wmnhFD+JwzuEJDsIonzF8="
       }
     },
     "ApiGatewayRestApi": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {
-        "Name": "dev-MedlinkBack-end",
+        "Name": "dev-back-end",
         "EndpointConfiguration": {
           "Types": [
             "EDGE"
@@ -687,7 +201,7 @@
         "Policy": ""
       }
     },
-    "ApiGatewayResourceProxyVar": {
+    "ApiGatewayResourceV1": {
       "Type": "AWS::ApiGateway::Resource",
       "Properties": {
         "ParentId": {
@@ -696,19 +210,31 @@
             "RootResourceId"
           ]
         },
+        "PathPart": "v1",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceV1ProxyVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceV1"
+        },
         "PathPart": "{proxy+}",
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
       }
     },
-    "ApiGatewayMethodProxyVarAny": {
+    "ApiGatewayMethodV1ProxyVarAny": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
         "HttpMethod": "ANY",
         "RequestParameters": {},
         "ResourceId": {
-          "Ref": "ApiGatewayResourceProxyVar"
+          "Ref": "ApiGatewayResourceV1ProxyVar"
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
@@ -733,7 +259,7 @@
                 ":lambda:path/2015-03-31/functions/",
                 {
                   "Fn::GetAtt": [
-                    "HelloLambdaFunction",
+                    "RouteLambdaFunction",
                     "Arn"
                   ]
                 },
@@ -745,59 +271,10 @@
         "MethodResponses": []
       },
       "DependsOn": [
-        "HelloLambdaPermissionApiGateway"
+        "RouteLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayMethodAny": {
-      "Type": "AWS::ApiGateway::Method",
-      "Properties": {
-        "HttpMethod": "ANY",
-        "RequestParameters": {},
-        "ResourceId": {
-          "Fn::GetAtt": [
-            "ApiGatewayRestApi",
-            "RootResourceId"
-          ]
-        },
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        },
-        "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition"
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "HelloLambdaFunction",
-                    "Arn"
-                  ]
-                },
-                "/invocations"
-              ]
-            ]
-          }
-        },
-        "MethodResponses": []
-      },
-      "DependsOn": [
-        "HelloLambdaPermissionApiGateway"
-      ]
-    },
-    "ApiGatewayDeployment1627076281592": {
+    "ApiGatewayDeployment1631984088254": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -806,16 +283,15 @@
         "StageName": "dev"
       },
       "DependsOn": [
-        "ApiGatewayMethodProxyVarAny",
-        "ApiGatewayMethodAny"
+        "ApiGatewayMethodV1ProxyVarAny"
       ]
     },
-    "HelloLambdaPermissionApiGateway": {
+    "RouteLambdaPermissionApiGateway": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
         "FunctionName": {
           "Fn::GetAtt": [
-            "HelloLambdaFunction",
+            "RouteLambdaFunction",
             "Arn"
           ]
         },
@@ -854,16 +330,16 @@
         "Ref": "ServerlessDeploymentBucket"
       },
       "Export": {
-        "Name": "sls-MedlinkBack-end-dev-ServerlessDeploymentBucketName"
+        "Name": "sls-back-end-dev-ServerlessDeploymentBucketName"
       }
     },
-    "HelloLambdaFunctionQualifiedArn": {
+    "RouteLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "HelloLambdaVersionAymjQJH3iEiU42NZYZya6x3rFTzSYI19sN810TW7A"
+        "Ref": "RouteLambdaVersionZ52KFdtVUKZRjtpe9dE8Zi8nKTDEUQ6dynB7Tozc"
       },
       "Export": {
-        "Name": "sls-MedlinkBack-end-dev-HelloLambdaFunctionQualifiedArn"
+        "Name": "sls-back-end-dev-RouteLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {
@@ -889,7 +365,7 @@
         ]
       },
       "Export": {
-        "Name": "sls-MedlinkBack-end-dev-ServiceEndpoint"
+        "Name": "sls-back-end-dev-ServiceEndpoint"
       }
     }
   }
