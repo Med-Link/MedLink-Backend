@@ -30,11 +30,13 @@ exports.addOrder = async (req, res) => {
   // var decoded = jwt_decode(token);
   // console.log(customerid);
   const status = 'undefined';
+  const datetime = new Date().toISOString().slice(0, 10);
+  // console.log(datetime);
 
   try {
     const newOrder = await pool.query(
-      'INSERT INTO public.order_req (description, prescription, customerid, pharmacyid, acceptstatus ) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [description, names, customerid, pharmacyid, status],
+      'INSERT INTO public.order_req (description, prescription, customerid, pharmacyid, acceptstatus,date ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [description, names, customerid, pharmacyid, status, datetime],
     );
 
     if (newOrder) {
