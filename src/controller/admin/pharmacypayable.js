@@ -1,7 +1,7 @@
 const pool = require('../../db/db');
 
 exports.viewpayablepharmacy = async (req, res) => {
-  const requests = await pool.query('SELECT pharmacyid, SUM(medlisttotal) FROM completedorder WHERE pharmacypaid = $1 AND paymentstatus = $2 GROUP BY pharmacyid', [
+  const requests = await pool.query('SELECT completedorder.pharmacyid, SUM(completedorder.medlisttotal),pharmacy.name FROM completedorder INNER JOIN pharmacy ON completedorder.pharmacyid=pharmacy.pharmacyid WHERE pharmacypaid = $1 AND paymentstatus = $2 GROUP BY completedorder.pharmacyid,pharmacy.name', [
     false, true,
   ]);
   if (requests.rows.length === 0) {
