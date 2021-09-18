@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const pool = require('../../db/db');
 
 exports.viewpayablepharmacy = async (req, res) => {
@@ -31,8 +32,6 @@ exports.pharmacypaid = async (req, res) => {
     if (pharmacypaid) {
       return res.status(200).json({
         message: 'pharmacy paid success',
-        // rows,
-
       });
     }
   } catch (err) {

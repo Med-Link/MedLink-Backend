@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const pool = require('../../db/db');
 
 exports.countcustomer = async (req, res) => {
