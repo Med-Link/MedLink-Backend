@@ -10,10 +10,11 @@ exports.getPharmacyOrder_reqs = async (req, res) => {
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
   const pharmacyid = decoded.payload.id;
   const status = 'rejected';
+  const status2 = 'accepted';
   try {
     const allOrders = await pool.query(
-      'SELECT * FROM order_req WHERE pharmacyid = $1 AND acceptstatus != $2', [
-        pharmacyid, status,
+      'SELECT * FROM order_req WHERE pharmacyid = $1 AND acceptstatus != $2 AND acceptedstatus !=$3', [
+        pharmacyid, status, status2,
       ],
     );
 
