@@ -64,7 +64,7 @@ exports.deletemedicine = async (req, res) => {
 
 exports.updatemedicine = async (req, res) => {
   const {
-    medid, newmedname
+    medid, newmedname,
   } = req.body;
 
   try {
@@ -83,24 +83,3 @@ exports.updatemedicine = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
-
-// exports.viewonemedicine  = (req, res) =>{
-//   const {
-//     medid,
-//   } = req.body;
-
-//   try {
-//     const medicine = await pool.query('SELECT FROM public.medicines WHERE medid = $1', [
-//       medid,
-//     ]);
-
-//     if (viewonemedicine) {
-//       return res.status(201).json({
-//         message: 'medicine found',
-//       });
-//     }
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('Server error');
-//   }
-// };

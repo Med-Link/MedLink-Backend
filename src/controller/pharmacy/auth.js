@@ -10,7 +10,7 @@ const pool = require('../../db/db');
 exports.signup = async (req, res) => {
   // User.findOne({ email: req.body.email }).exec((error, userdet) => {
   const {
-    email, name, contactNumber, password,
+    email, name, contactNumber, password, latitude, longitude, city,
   } = req.body;
 
   try {
@@ -44,7 +44,7 @@ exports.signup = async (req, res) => {
       text: 'Click the link below to verify your Email',
       html: `
       <h2>Click the link below to verify email</h2>
-      <p> ${process.env.CLIENT_URL}/${token} </p>`,
+      <p> ${process.env.CLIENT_URL}/VerifyEmailPharmacy/${token} </p>`,
     };
 
     const sent = transporter.sendMail(mailOptions, (error) => {
@@ -61,8 +61,8 @@ exports.signup = async (req, res) => {
     names = regDocs.map((item) => item.img);
 
     const newUser = await pool.query(
-      'INSERT INTO public.pharmacy ( email, name, contactnumber, activestatus, verifiedemail, document1, document2, document3, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
-      [email, name, contactNumber, activeStatus, verifiedemail, names[0], names[1], names[2], bcryptPassword],
+      'INSERT INTO public.pharmacy ( email, name, contactnumber, activestatus, verifiedemail, document1, document2, document3, password, latitude, longitude, city) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
+      [email, name, contactNumber, activeStatus, verifiedemail, names[0], names[1], names[2], bcryptPassword, latitude, longitude,city],
     );
     // const jwtToken = jwtGenerator(newUser.rows[0].user_id);
     if (newUser) {
@@ -89,10 +89,10 @@ exports.signin = async (req, res) => {
     if (user.rows.length === 0) {
       return res.status(400).json('Invalid Credential');
     }
-    if (user.rows[0].activeStatus === 0) {
+    if (user.rows[0].activeStatus === false) {
       return res.status(400).json('Signup request not accepted ');
     }
-    if (user.rows[0].verifiedemail === 0) {
+    if (user.rows[0].verifiedemail === false) {
       return res.status(400).json('Please verify your email ');
     }
     const userdet = user.rows;

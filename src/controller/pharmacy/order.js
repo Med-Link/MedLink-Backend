@@ -9,20 +9,20 @@ exports.getPharmacyOrder_reqs = async (req, res) => {
 
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
   const pharmacyid = decoded.payload.id;
-
+  const status = 'rejected';
   try {
     const allOrders = await pool.query(
-      'SELECT * FROM order_req,customers WHERE pharmacyid = $1 AND customers.customerid = order_req.customerid' , [
-        pharmacyid,
+      'SELECT * FROM order_req WHERE pharmacyid = $1 AND acceptstatus != $2', [
+        pharmacyid, status,
       ],
     );
 
     if (allOrders.rows.length === 0) {
-      return res.status(401).json('No rows to show');
+      return res.status(400).json('No rows to show');
     }
 
     if (allOrders) {
-      return res.status(201).json({
+      return res.status(200).json({
         message: 'orders listed success',
         allOrders,
       });
@@ -46,16 +46,16 @@ exports.getPharmacyOrder_req = async (req, res) => {
 
   try {
     const singleOrder = await pool.query(
-      'SELECT * FROM order_req WHERE pharmacyid = $1 AND id = $2', [
+      'SELECT * FROM order_req WHERE order_req.pharmacyid = $1 AND order_req.id = $2', [
         pharmacyid, orderreqid,
       ],
     );
     if (singleOrder.rows.length === 0) {
-      return res.status(401).json('No rows to show');
+      return res.status(400).json('No rows to show');
     }
 
     if (singleOrder) {
-      return res.status(201).json({
+      return res.status(200).json({
         message: 'orders listed success',
         singleOrder,
       });
@@ -72,11 +72,11 @@ exports.rejectOrder_req = async (req, res) => {
     rejectmessage,
   } = req.body;
 
-  const status = 'reject';
+  const status = 'rejected';
 
   try {
     const rejectOrder = await pool.query(
-      'UPDATE public.order_req SET acceptstatus = $1 AND SET rejectmessage = $2 WHERE id = $3', [
+      'UPDATE public.order_req SET acceptstatus = $1, rejectmessage = $2 WHERE id = $3', [
         status, rejectmessage, orderreqid,
       ],
     );
@@ -87,6 +87,34 @@ exports.rejectOrder_req = async (req, res) => {
     if (rejectOrder) {
       return res.status(200).json({
         message: 'orders rejected success',
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.countAcceptedOrders = async (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const pharmacyid = decoded.payload.id;
+
+  try {
+    const acceptcount = await pool.query(
+      "SELECT COUNT(id) FROM order_req WHERE acceptstatus='accepted' AND pharmacyid = $1", [
+        pharmacyid,
+      ],
+    );
+      // console.log(acceptcount);
+    if (acceptcount.rows.length === 0) {
+      return res.status(400).json('No rows to show');
+    }
+
+    if (acceptcount) {
+      return res.status(200).json({
+        message: 'orders listed success',
+        acceptcount,
       });
     }
   } catch (err) {

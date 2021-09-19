@@ -131,7 +131,10 @@ exports.completeorder = async (req, res) => {
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
   const customerid = decoded.payload.id;
 
-  const paymentstatus = 0;
+  // const paymentstatus = false;
+  // const pharmacypaid = false;
+  const datetime = new Date().toISOString().slice(0, 10);
+
   const pharmacy = await pool.query(
     'SELECT pharmacyid FROM order_medlist WHERE medlistid = $1', [
       medlistid,
@@ -140,9 +143,9 @@ exports.completeorder = async (req, res) => {
   const { pharmacyid } = pharmacy.rows[0];
   try {
     const checkoutorder = await pool.query(
-      'INSERT INTO public.completedorder (medlistid, medlisttotal, deliverycost, servicecost, totalcost, paymentstatus, customerid, address, contactnumber, pharmacyid) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
+      'INSERT INTO public.completedorder (medlistid, medlisttotal, deliverycost, servicecost, totalcost, paymentstatus, customerid, address, contactnumber, pharmacyid, pharmacypaid, date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
       // eslint-disable-next-line max-len
-      [medlistid, totalprice, deliverycost, servicecost, totalcost, paymentstatus, customerid, address, contactnumber, pharmacyid],
+      [medlistid, totalprice, deliverycost, servicecost, totalcost, false, customerid, address, contactnumber, pharmacyid, false, datetime],
     );
     if (checkoutorder) {
       return res.status(201).json({
@@ -160,20 +163,23 @@ exports.checkout = async (req, res) => {
     // eslint-disable-next-line camelcase
     medlistid, status_code,
   } = req.body;
-  // console.log(contactnumber, address);
-  const paymentstatus = 1;
-
   // eslint-disable-next-line camelcase
   if (status_code === '2') {
     try {
       const update = await pool.query(
         'UPDATE completedorder SET paymentstatus = $1 WHERE medlistid = $2', [
-          paymentstatus, medlistid,
+          true, medlistid,
         ],
       );
-      const details = await pool.query('SELECT * FROM public.completedorder WHERE paymentstatus = $1 && medlistid = $2',
-        [1, medlistid]);
-
+      const details = await pool.query('SELECT * FROM public.completedorder WHERE paymentstatus = $1 AND medlistid = $2',
+        [true, medlistid]);
+      if (update) {
+        pool.query(
+          'UPDATE medicinebatch SET quantity=medicinebatch.quantity-list_items.quantity FROM list_items WHERE medicinebatch.batchid=list_items.batchid AND medlistid=$1', [
+            medlistid,
+          ],
+        );
+      }
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -193,38 +199,17 @@ exports.checkout = async (req, res) => {
       };
 
       const sent = transporter.sendMail(mailOptions, (error) => {
-        if (sent) {
-          return 'order delivery email sent';
+        if (!sent) {
+          return res.status(401).json(error);
         }
-        return res.status(401).json(error);
+        return 'order delivery email sent';
       });
-
-      // if (update) {
-      //   // console.log (update);
-      //   return res.status(200).json({
-      //     message: 'payment succesfull',
-      //   });
-      // }
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
     }
   } else {
-    try {
-      const deletecompletedorder = await pool.query(
-        'DELETE FROM completedorder WHERE medlistid = $1', [
-          medlistid,
-        ],
-      );
-
-      if (deletecompletedorder) {
-        return res.status(200).json({
-          message: 'completed order deleted',
-        });
-      }
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server error');
-    }
+    console.error('payment error');
+    res.status(500).send('Server error');
   }
 };

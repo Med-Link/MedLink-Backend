@@ -35,7 +35,7 @@ exports.signup = async (req, res) => {
       text: 'Click the link below to verify your Email',
       html: `
       <h2>Click the link below to verify email</h2>
-      <p> ${process.env.CLIENT_URL}/verifyemail/${token} </p>`,
+      <p> ${process.env.CLIENT_URL}/VerifyEmail/${token} </p>`,
     };
 
     const sent = transporter.sendMail(mailOptions, (error) => {
@@ -76,11 +76,11 @@ exports.signin = async (req, res) => {
     ]);
     // const role = customer;
     if (user.rows.length === 0) {
-      return res.status(401).json('Invalid Credential');
+      return res.status(400).json('Invalid Credential');
     }
-    // if (user.rows[0].verifiedemail === false) {
-    //   return res.status(401).json('Please verify your email ');
-    // }
+    if (user.rows[0].verifiedemail === false) {
+      return res.status(400).json('Please verify your email ');
+    }
     // console.log(user.rows[0].verifiedemail);
     const validPassword = await bcrypt.compare(
       password,
@@ -88,7 +88,7 @@ exports.signin = async (req, res) => {
     );
     const userdet = user.rows;
     if (!validPassword) {
-      return res.status(401).json('Invalid Credential');
+      return res.status(400).json('Invalid Credential');
     }
     const payload = { id: user.rows[0].customerid, role: 'customer' };
     const token = jwt.sign({ payload }, process.env.JWT_SECRET, { noTimestamp: true, expiresIn: '6h' });
@@ -136,7 +136,7 @@ exports.forgotpassword = async (req, res) => {
   }
   const payload = { id: user.rows[0].customerid };
   // console.log(user.rows[0].customerid);
-  const token = jwt.sign({ payload }, process.env.PASSWORD_RESET, { noTimestamp: true, expiresIn: '20m' });
+  const token = jwt.sign({ payload }, process.env.PASSWORD_RESET, { noTimestamp: true, expiresIn: '1h' });
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -153,7 +153,7 @@ exports.forgotpassword = async (req, res) => {
     text: 'Click the link below to login to your MedLink account',
     html: `
     <h2>Click the link below to login to your MedLink account</h2>
-    <p> ${process.env.CLIENT_URL}/resetpassword/${token} </p>`,
+    <p> ${process.env.CLIENT_URL}/ResetPassword/${token} </p>`,
   };
 
   const sent = transporter.sendMail(mailOptions, (error, info) => {
@@ -167,7 +167,7 @@ exports.forgotpassword = async (req, res) => {
 exports.resetpassword = async (req, res) => {
   const { resetlink, newpassword } = req.body;
 
-  // console.log(resetlink);
+  console.log(resetlink);
   const verify = jwt.verify(resetlink, process.env.PASSWORD_RESET);
   if (verify) {
     const bcryptPassword = bcrypt.hashSync(newpassword, 10);

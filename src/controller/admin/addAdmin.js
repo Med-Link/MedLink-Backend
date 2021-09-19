@@ -15,8 +15,6 @@ exports.addnewAdmin = async (req, res) => {
     if (user.rows.length > 0) {
       return res.status(401).json('admin already exist!');
     }
-    // const activestatus = 0;
-    // const salt = bcrypt.genSalt(10);
     const bcryptPassword = await bcrypt.hashSync(password, 10);
 
     const newUser = await pool.query(
@@ -24,7 +22,6 @@ exports.addnewAdmin = async (req, res) => {
       [email, firstName, lastName, bcryptPassword],
     );
 
-    // const jwtToken = jwtGenerator(newUser.rows[0].user_id);
     if (newUser) {
       return res.status(201).json({
         message: 'admin created success',

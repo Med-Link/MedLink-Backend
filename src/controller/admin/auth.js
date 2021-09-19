@@ -1,47 +1,7 @@
 /* eslint-disable consistent-return */
-// const jwt = require('jsonwebtoken');
-// const User = require('../../models/user');
-
-// exports.signup = (req, res) => {
-//   User.findOne({ email: req.body.email }).exec((error, userdet) => {
-//     if (userdet) {
-//       return res.status(400).json({
-//         message: 'Admin already registered',
-//       });
-//     }
-//     const {
-//       firstName, lastName, email, contactNumber, password,
-//     } = req.body;
-
-//     const _user = new User({
-//       firstName,
-//       lastName,
-//       email,
-//       contactNumber,
-//       activeStatus: 1,
-//       password,
-//       userName: Math.random().toString(),
-//       role: 'admin',
-//     });
-//     _user.save((error, userdet) => {
-//       if (error) {
-//         return res.status(400).json({
-//           message: error,
-//         });
-//       }
-//       if (userdet) {
-//         return res.status(201).json({
-//           message: 'Admin created success',
-//         });
-//       }
-//     });
-//   });
-// };
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
-// const jwtGenerator = require('../utils/jwtGenerator');
-// const User = require('../../models/user');
 const pool = require('../../db/db');
 
 exports.signin = async (req, res) => {
@@ -51,7 +11,6 @@ exports.signin = async (req, res) => {
     const user = await pool.query('SELECT * FROM public.admin WHERE email = $1', [
       email,
     ]);
-    // const role = customer;
     if (user.rows.length === 0) {
       return res.status(401).json('Invalid Credential');
     }
@@ -94,7 +53,6 @@ exports.forgotpassword = async (req, res) => {
     return res.status(401).json('User from this email does not exist');
   }
   const payload = { id: user.rows[0].adminid };
-  // console.log(user.rows[0].customerid);
   const token = jwt.sign({ payload }, process.env.PASSWORD_RESET, { noTimestamp: true, expiresIn: '20m' });
 
   const transporter = nodemailer.createTransport({
@@ -126,13 +84,10 @@ exports.forgotpassword = async (req, res) => {
 exports.resetpassword = async (req, res) => {
   const { resetlink, newpassword } = req.body;
 
-  // console.log(resetlink);
   const verify = jwt.verify(resetlink, process.env.PASSWORD_RESET);
   if (verify) {
     const bcryptPassword = bcrypt.hashSync(newpassword, 10);
-    // const decoded = jwt.decode(resetLink, process.env.PASSWORD_RESET);
     const userid = verify.payload.id;
-    // console.log(userid);
     const user = await pool.query('SELECT * FROM public.admin WHERE adminid = $1', [
       userid,
     ]);

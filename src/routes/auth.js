@@ -10,7 +10,7 @@ const router = express.Router();
 router.post('/signup', validateSignupRequest, isRequestValidated, signup);
 router.post('/signin', validateSigninRequest, isRequestValidated, signin);
 router.post('/forgotpassword', forgotpassword);
-router.put('/resetpassword', resetpassword);
+router.post('/resetcustomerpassword', resetpassword);
 router.post('/verifyemail', verifyemail);
 router.post('/signout', signout);
 

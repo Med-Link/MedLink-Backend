@@ -30,6 +30,8 @@ const addnewadminRoutes = require('./routes/admin/addAdmin');
 const handlemedicineRoutes = require('./routes/admin/handlemedicine');
 const adminuserprofileRoutes = require('./routes/admin/userprofile');
 const admindashboardRoutes = require('./routes/admin/dashboard');
+const adminpharmacypayableRoutes = require('./routes/admin/pharmacypayable');
+
 
 
 env.config();
@@ -69,6 +71,8 @@ app.use('/api', pharmacyuserprofileRoutes);
 app.use('/api', admindashboardRoutes);
 app.use('/api', pharmacycompletedorderRoutes);
 app.use('/api', buyinghistoryRoutes);
+app.use('/api', adminpharmacypayableRoutes);
+
 
 
 
