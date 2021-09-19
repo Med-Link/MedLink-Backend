@@ -1,17 +1,14 @@
-// const Order = require('../models/order');
+/* eslint-disable consistent-return */
 
 const jwt = require('jsonwebtoken');
 
 const pool = require('../db/db');
 
-// eslint-disable-next-line consistent-return
 exports.addOrder = async (req, res) => {
   const {
     description, pharmacyid,
   } = req.body;
 
-  //   const decoded = jwt.verify(token, config.get('jwtPrivateKey'));
-  // var userId = decoded.id
   let orderPics = [];
 
   if (req.files.length > 0) {
@@ -21,7 +18,7 @@ exports.addOrder = async (req, res) => {
   names = orderPics.map((item) => item.img);
 
   // const obj = JSON.parse(names);
-  // console.log(obj);
+  // console.log(req.files);
 
   const token = req.headers.authorization.split(' ')[1];
 
@@ -30,7 +27,7 @@ exports.addOrder = async (req, res) => {
   // var decoded = jwt_decode(token);
   // console.log(customerid);
   const status = 'undefined';
-  const datetime = new Date().toISOString().slice(0, 10);
+  const datetime = new Date();
   // console.log(datetime);
 
   try {
@@ -50,45 +47,6 @@ exports.addOrder = async (req, res) => {
   }
 };
 
-//   var prescriptionPics = [];
-
-//   if (req.files.length > 0) {
-//     prescriptionPics = req.files.map((file) => {
-//       return { img: file.location };
-//     });
-//   }
-// console.log(prescriptionPics);
-
-//   const order = new Order({
-//     description,
-//     prescriptionPics,
-//     amount,
-//     address,
-//     contactNumber,
-//     addedBy: req.user._id,
-//   });
-
-// const orderobj= {
-//       description:req.body.description,
-//       prescription:req.body.prescription,
-//       amount:req.body.amount,
-//       address:req.body.address,
-//       contactNumber:req.body.contactNumber,
-//       addedBy:req.user._id
-// }
-
-// const ord = new Order(orderobj);
-
-//   order.save((error, order) => {
-//     if (error) return res.status(400).json({ error });
-//     if (order) {
-//       return res.status(201).json({ order, files: req.files });
-//     }
-//     console.log(order);
-//   });
-// };
-
-// eslint-disable-next-line consistent-return
 exports.getOrder_reqs = async (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
 
@@ -147,6 +105,31 @@ exports.getOrder_req = async (req, res) => {
       return res.status(201).json({
         message: 'orders listed success',
         singleOrder,
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+exports.rejectedorders = async (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decoded = jwt.decode(token, process.env.JWT_SECRET);
+  const customerid = decoded.payload.id;
+  const status = 'rejected';
+  try {
+    const getallrejected = await pool.query(
+      'SELECT * FROM order_req INNER JOIN pharmacy ON order_req.pharmacyid = pharmacy.pharmacyid WHERE customerid = $1 AND acceptstatus = $2 ORDER BY id DESC LIMIT 15', [
+        customerid, status,
+      ],
+    );
+    const { rows } = getallrejected;
+
+    if (getallrejected) {
+      return res.status(200).json({
+        message: 'rejected order requests listed success',
+        rows,
       });
     }
   } catch (err) {
