@@ -41,17 +41,18 @@ exports.addcsv = async (req, res) => {
   const pharmacyid = decoded.payload.id;
 
   try {
-    for (var i = 0; i < (csvarray.length); i++) {
+    for (var i = 0; i < (csvarray.length-1); i++) {
       const newBatch = await pool.query(
         'INSERT INTO public.medicinebatch (pharmacyid, medid, quantity, price, expiredate, manufacdate ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
         [pharmacyid, csvarray[i].medid, csvarray[i].quantity, csvarray[i].price, csvarray[i].expiredate, csvarray[i].manufacdate],
     );
-    if (newBatch) {
+      }
+    if (i==csvarray.length-2) {
       return res.status(201).json({
         message: 'CSV file added successfully',
       });
     }
-    }
+    
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
