@@ -33,7 +33,7 @@ exports.closeddeals = async (req, res) => {
 
   try {
     const getorderhistory = await pool.query(
-      'SELECT * FROM public.completedorder INNER JOIN public.customers ON completedorder.customerid = customers.customerid WHERE pharmacyid = $1 AND paymentstatus = $2 shipped =$3', [
+      'SELECT * FROM public.completedorder INNER JOIN public.customers ON completedorder.customerid = customers.customerid WHERE pharmacyid = $1 AND paymentstatus = $2 AND shipped =$3', [
         pharmacyid, true, false,
       ],
     );
@@ -79,7 +79,7 @@ exports.shippeddeals = async (req, res) => {
 
   try {
     const getshippedorders = await pool.query(
-      'SELECT * FROM public.completedorder INNER JOIN public.customers ON completedorder.customerid = customers.customerid WHERE pharmacyid = $1 AND paymentstatus = $2 AND shipped =$3', [
+      'SELECT * FROM public.completedorder INNER JOIN public.customers ON completedorder.customerid = customers.customerid WHERE pharmacyid = $1 AND paymentstatus = $2 AND shipped = $3', [
         pharmacyid, true, true,
       ],
     );
