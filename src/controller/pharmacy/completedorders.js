@@ -53,16 +53,15 @@ exports.markshipped = async (req, res) => {
   const {
     orderid,
   } = req.body;
-
   try {
     const marked = await pool.query(
-      'UPDATE public.completed order SET shipped = $1 WHERE orderid = $2', [
+      'UPDATE public.completedorder SET shipped = $1 WHERE orderid = $2', [
         true, orderid,
       ],
     );
     if (marked) {
       return res.status(200).json({
-        message: 'orders marked as shipped rejected ',
+        message: 'orders marked as shipped',
       });
     }
   } catch (err) {

@@ -11,7 +11,7 @@ const router = express.Router();
 router.get('/pharmacy/countcloseddeals', requireSignin, pharmacyMiddleware, countcloseddeals);
 router.get('/pharmacy/closeddeals', requireSignin, pharmacyMiddleware, closeddeals);
 router.get('/pharmacy/shippeddeals', requireSignin, pharmacyMiddleware, shippeddeals);
-router.post('/pharmacy/shippeddeals', requireSignin, pharmacyMiddleware, markshipped);
+router.post('/pharmacy/markshipped', requireSignin, pharmacyMiddleware, markshipped);
 
 
 
