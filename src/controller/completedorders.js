@@ -133,7 +133,7 @@ exports.completeorder = async (req, res) => {
 
   // const paymentstatus = false;
   // const pharmacypaid = false;
-  const datetime = new Date().toISOString().slice(0, 10);
+  const datetime = new Date();
 
   const pharmacy = await pool.query(
     'SELECT pharmacyid FROM order_medlist WHERE medlistid = $1', [
@@ -143,9 +143,9 @@ exports.completeorder = async (req, res) => {
   const { pharmacyid } = pharmacy.rows[0];
   try {
     const checkoutorder = await pool.query(
-      'INSERT INTO public.completedorder (medlistid, medlisttotal, deliverycost, servicecost, totalcost, paymentstatus, customerid, address, contactnumber, pharmacyid, pharmacypaid, date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
+      'INSERT INTO public.completedorder (medlistid, medlisttotal, deliverycost, servicecost, totalcost, paymentstatus, customerid, address, contactnumber, pharmacyid, pharmacypaid, date, shipped) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *',
       // eslint-disable-next-line max-len
-      [medlistid, totalprice, deliverycost, servicecost, totalcost, false, customerid, address, contactnumber, pharmacyid, false, datetime],
+      [medlistid, totalprice, deliverycost, servicecost, totalcost, false, customerid, address, contactnumber, pharmacyid, false, datetime, false],
     );
     if (checkoutorder) {
       return res.status(201).json({
@@ -173,13 +173,27 @@ exports.checkout = async (req, res) => {
       );
       const details = await pool.query('SELECT * FROM public.completedorder WHERE paymentstatus = $1 AND medlistid = $2',
         [true, medlistid]);
-      if (update) {
-        pool.query(
-          'UPDATE medicinebatch SET quantity=medicinebatch.quantity-list_items.quantity FROM list_items WHERE medicinebatch.batchid=list_items.batchid AND medlistid=$1', [
-            medlistid,
-          ],
-        );
+      // if (update) {
+      const reducestock = await pool.query(
+        'UPDATE medicinebatch SET quantity=medicinebatch.quantity-list_items.quantity FROM list_items WHERE medicinebatch.batchid=list_items.batchid AND medlistid=$1', [
+          medlistid,
+        ],
+      );
+      const updatemedlist = await pool.query(
+        'UPDATE order_medlist SET acceptstatus = $1 WHERE medlistid = $2', [
+          true, medlistid,
+        ],
+      );
+      if (!update) {
+        return res.status(401).send('Server error');
       }
+      if (!reducestock) {
+        return res.status(401).send('Server error');
+      }
+      if (!updatemedlist) {
+        return res.status(401).send('Server error');
+      }
+      // }
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {

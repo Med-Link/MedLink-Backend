@@ -8,7 +8,7 @@ exports.allorderbills = async (req, res) => {
 
   try {
     const getallbills = await pool.query(
-      'SELECT order_medlist.medlistid, order_medlist.order_reqid, order_medlist.totalprice, order_medlist.pharmacyid, order_medlist.customerid, order_medlist.acceptstatus, pharmacy.name FROM public.order_medlist INNER JOIN public.pharmacy ON order_medlist.pharmacyid = pharmacy.pharmacyid WHERE customerid = $1 AND acceptstatus= $2', [
+      'SELECT order_medlist.date,order_medlist.medlistid, order_medlist.order_reqid, order_medlist.totalprice, order_medlist.pharmacyid, order_medlist.customerid, order_medlist.acceptstatus, pharmacy.name FROM public.order_medlist INNER JOIN public.pharmacy ON order_medlist.pharmacyid = pharmacy.pharmacyid WHERE customerid = $1 AND acceptstatus= $2', [
         customerid, false,
       ],
     );

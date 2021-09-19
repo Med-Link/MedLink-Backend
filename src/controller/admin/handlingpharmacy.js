@@ -37,7 +37,7 @@ exports.acceptpharmacy = async (req, res) => {
   });
 
   const accept = await pool.query('UPDATE public.pharmacy SET activestatus = $1 WHERE pharmacyid = $2', [
-    1, pharmacyid,
+    true, pharmacyid,
   ]);
   if (accept) {
     return res.status(201).json({
@@ -95,7 +95,7 @@ exports.rejectpharmacy = async (req, res) => {
 
 exports.viewpharmacyrequests = async (req, res) => {
   const requests = await pool.query('SELECT * FROM public.pharmacy WHERE activestatus = $1', [
-    0,
+    false,
   ]);
   if (requests.rows.length === 0) {
     return res.status(401).json('server error');
