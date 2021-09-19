@@ -17,8 +17,8 @@ exports.addstock = async (req, res) => {
 
   try {
     const newBatch = await pool.query(
-      'INSERT INTO public.medicinebatch (pharmacyid, medid, quantity, price, expiredate, manufacdate ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [pharmacyid, medid, quantity, price, expiredate, manufacdate],
+      'INSERT INTO public.medicinebatch (pharmacyid, medid, quantity, price, expiredate, manufacdate, activestatus ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [pharmacyid, medid, quantity, price, expiredate, manufacdate,true],
     );
 
     if (newBatch) {
@@ -39,12 +39,12 @@ exports.addcsv = async (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
   const pharmacyid = decoded.payload.id;
-
+  // console.log(csvarray);
   try {
     for (var i = 0; i < (csvarray.length-1); i++) {
       const newBatch = await pool.query(
-        'INSERT INTO public.medicinebatch (pharmacyid, medid, quantity, price, expiredate, manufacdate ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-        [pharmacyid, csvarray[i].medid, csvarray[i].quantity, csvarray[i].price, csvarray[i].expiredate, csvarray[i].manufacdate],
+        'INSERT INTO public.medicinebatch (pharmacyid, medid, quantity, price, expiredate, manufacdate,activestatus ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+        [pharmacyid, csvarray[i].medid, csvarray[i].quantity, csvarray[i].price, csvarray[i].expiredate, csvarray[i].manufacdate,true],
     );
       }
     if (i==csvarray.length-2) {
