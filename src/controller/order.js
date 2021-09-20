@@ -27,8 +27,11 @@ exports.addOrder = async (req, res) => {
   // var decoded = jwt_decode(token);
   // console.log(customerid);
   const status = 'undefined';
-  const datetime = new Date();
+
+  const datetime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
   // console.log(datetime);
+  // const datetime = new Date().getTimezoneOffset();
+  // convertTZ(date, "Asia/Jakarta");
 
   try {
     const newOrder = await pool.query(

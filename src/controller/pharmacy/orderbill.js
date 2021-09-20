@@ -13,7 +13,7 @@ exports.sendorderbill = async (req, res) => {
   } = req.body;
   // console.log(req)
   const acceptstatus = 0;
-  const datetime = new Date().toISOString().slice(0, 10);
+  const datetime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
 
   const token = req.headers.authorization.split(' ')[1];
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
