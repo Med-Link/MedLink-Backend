@@ -79,3 +79,22 @@ exports.averageorderspermonth = async (req, res) => {
   }
   return res.status(400).json({ error: 'Server error' });
 };
+
+exports.incomegrowth = async (req, res) => {
+  const income = await pool.query(`SELECT SUM(servicecost),TO_CHAR( date, 'month') AS month 
+  FROM completedorder 
+  WHERE paymentstatus = true
+  GROUP BY TO_CHAR( date, 'month')`, [
+  ]);
+  if (income.rows.length === 0) {
+    return res.status(400).json('server error');
+  }
+  const result = income.rows;
+  if (income) {
+    return res.status(200).json({
+      message: 'Pharmacy signup request listed success',
+      result,
+    });
+  }
+  return res.status(400).json({ error: 'Server error' });
+};
