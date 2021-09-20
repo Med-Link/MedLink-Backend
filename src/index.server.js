@@ -31,7 +31,7 @@ const handlemedicineRoutes = require('./routes/admin/handlemedicine');
 const adminuserprofileRoutes = require('./routes/admin/userprofile');
 const admindashboardRoutes = require('./routes/admin/dashboard');
 const adminpharmacypayableRoutes = require('./routes/admin/pharmacypayable');
-
+const adminincomeRoutes = require('./routes/admin/income');
 
 
 env.config();
@@ -72,7 +72,7 @@ app.use('/api', admindashboardRoutes);
 app.use('/api', pharmacycompletedorderRoutes);
 app.use('/api', buyinghistoryRoutes);
 app.use('/api', adminpharmacypayableRoutes);
-
+app.use('/api', adminincomeRoutes);
 
 
 
