@@ -21,3 +21,21 @@ exports.viewmonthlyincome = async (req, res) => {
   return res.status(400).json({ error: 'Server error' });
 };
 
+exports.totalmonthlyincome = async (req, res) => {
+  const income = await pool.query(`SELECT SUM(completedorder.servicecost)
+  FROM completedorder
+  WHERE paymentstatus = true AND EXTRACT(MONTH FROM completedorder.date)= EXTRACT(month FROM CURRENT_DATE)`, [
+  ]);
+  if (income.rows.length === 0) {
+    return res.status(400).json('server error');
+  }
+  const result = income.rows;
+  if (income) {
+    return res.status(200).json({
+      message: 'Pharmacy signup request listed success',
+      result,
+    });
+  }
+  return res.status(400).json({ error: 'Server error' });
+};
+
