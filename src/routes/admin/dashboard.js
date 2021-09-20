@@ -8,6 +8,5 @@ const router = express.Router();
 // router.post('/admin/addnewAdmin', validateSigninRequest, isRequestValidated, addnewAdmin);
 router.get('/admin/countcustomer', requireSignin, adminMiddleware, countcustomer);
 router.get('/admin/countpharmacy', requireSignin, adminMiddleware, countpharmacy);
-router.get('/admin/viewmonthlyincome', requireSignin, adminMiddleware, viewmonthlyincome);
 
 module.exports = router;
