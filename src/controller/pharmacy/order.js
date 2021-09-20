@@ -13,7 +13,7 @@ exports.getPharmacyOrder_reqs = async (req, res) => {
   const status2 = 'accepted';
   try {
     const allOrders = await pool.query(
-      'SELECT * FROM order_req WHERE pharmacyid = $1 AND acceptstatus != $2 AND acceptstatus !=$3', [
+      'SELECT * FROM order_req INNER JOIN customers ON order_req.customerid= customers.customerid WHERE pharmacyid = $1 AND acceptstatus != $2 AND acceptstatus !=$3', [
         pharmacyid, status, status2,
       ],
     );
