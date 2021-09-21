@@ -17,7 +17,7 @@ exports.getPharmacyOrder_reqs = async (req, res) => {
         pharmacyid, status, status2,
       ],
     );
-
+      console.log(allOrders);
     if (allOrders.rows.length === 0) {
       return res.status(400).json('No rows to show');
     }
