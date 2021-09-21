@@ -80,7 +80,7 @@ exports.signin = async (req, res) => {
     if (user.rows.length === 0) {
       return res.status(400).json('Invalid Credential');
     }
-    if (user.rows[0].activeStatus === false) {
+    if (user.rows[0].activestatus === false) {
       return res.status(400).json('Signup request not accepted ');
     }
     if (user.rows[0].verifiedemail === false) {
