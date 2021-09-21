@@ -22,6 +22,7 @@ const pharmacystockRoutes = require('./routes/pharmacy/stock');
 const pharmacyorderbillRoutes = require('./routes/pharmacy/orderbill');
 const pharmacyuserprofileRoutes = require('./routes/pharmacy/userprofile');
 const pharmacycompletedorderRoutes = require('./routes/pharmacy/completedorders');
+const pharmacydashboardRoutes = require('./routes/pharmacy/dashboard');
 
 
 const adminRoutes = require('./routes/admin/auth');
@@ -73,7 +74,7 @@ app.use('/api', pharmacycompletedorderRoutes);
 app.use('/api', buyinghistoryRoutes);
 app.use('/api', adminpharmacypayableRoutes);
 app.use('/api', adminincomeRoutes);
-
+app.use('/api', pharmacydashboardRoutes);
 
 
 
