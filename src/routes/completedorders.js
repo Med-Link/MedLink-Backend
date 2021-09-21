@@ -10,7 +10,7 @@ const router = express.Router();
 // router.post('/order/completeorder', requireSignin, customerMiddleware, completeorder);
 router.post('/order/completeorder', requireSignin, customerMiddleware, completeorder);
 router.post('/order/findtotal', requireSignin, customerMiddleware, findtotal);
-router.post('/order/checkout', requireSignin, customerMiddleware, checkout);
+router.post('/order/checkout', checkout);
 // router.post('/order/checkoutfailed', requireSignin, customerMiddleware, checkoutfailed);
 
 // router.post('/order/acceptorderbill', requireSignin, customerMiddleware, acceptorderbill);
