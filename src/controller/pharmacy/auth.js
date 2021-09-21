@@ -1,14 +1,10 @@
-/* eslint-disable max-len */
 /* eslint-disable consistent-return */
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
-// const User = require('../../models/user');
 const pool = require('../../db/db');
 
-// eslint-disable-next-line consistent-return
 exports.signup = async (req, res) => {
-  // User.findOne({ email: req.body.email }).exec((error, userdet) => {
   const {
     email, name, contactNumber, password, latitude, longitude, city,
   } = req.body;
@@ -27,7 +23,6 @@ exports.signup = async (req, res) => {
       regDocs = req.files.map((file) => ({ img: file.location }));
     }
     const payload = { email };
-    // console.log(user.rows[0].customerid);
     const token = jwt.sign({ payload }, process.env.PASSWORD_RESET, { noTimestamp: true, expiresIn: '20m' });
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -53,7 +48,6 @@ exports.signup = async (req, res) => {
       }
     });
 
-    // const salt = bcrypt.genSalt(10);
     const bcryptPassword = await bcrypt.hashSync(password, 10);
     const activeStatus = 0;
     const verifiedemail = 0;
@@ -64,7 +58,6 @@ exports.signup = async (req, res) => {
       'INSERT INTO public.pharmacy ( email, name, contactnumber, activestatus, verifiedemail, document1, document2, document3, password, latitude, longitude, city) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
       [email, name, contactNumber, activeStatus, verifiedemail, names[0], names[1], names[2], bcryptPassword, latitude, longitude,city],
     );
-    // const jwtToken = jwtGenerator(newUser.rows[0].user_id);
     if (newUser) {
       return res.status(201).json({
         message: 'pharmacy created success',
@@ -77,7 +70,6 @@ exports.signup = async (req, res) => {
   }
 };
 
-// eslint-disable-next-line consistent-return
 exports.signin = async (req, res) => {
   const { email, password } = req.body;
 
@@ -85,11 +77,10 @@ exports.signin = async (req, res) => {
     const user = await pool.query('SELECT * FROM public.pharmacy WHERE email = $1', [
       email,
     ]);
-    // const role = customer;
     if (user.rows.length === 0) {
       return res.status(400).json('Invalid Credential');
     }
-    if (user.rows[0].activeStatus === false) {
+    if (user.rows[0].activestatus === false) {
       return res.status(400).json('Signup request not accepted ');
     }
     if (user.rows[0].verifiedemail === false) {
@@ -118,7 +109,6 @@ exports.signin = async (req, res) => {
 };
 
 exports.signout = (req, res) => {
-  // res.clearCookie('token');
   res.status(200).json({
     message: 'Signout successfully...!',
   });
@@ -148,7 +138,6 @@ exports.forgotpassword = async (req, res) => {
     return res.status(400).json('User from this email does not exist');
   }
   const payload = { id: user.rows[0].pharmacyid };
-  // console.log(user.rows[0].customerid);
   const token = jwt.sign({ payload }, process.env.PASSWORD_RESET, { noTimestamp: true, expiresIn: '20m' });
 
   const transporter = nodemailer.createTransport({
@@ -180,13 +169,10 @@ exports.forgotpassword = async (req, res) => {
 exports.resetpassword = async (req, res) => {
   const { resetlink, newpassword } = req.body;
 
-  // console.log(resetlink);
   const verify = jwt.verify(resetlink, process.env.PASSWORD_RESET);
   if (verify) {
     const bcryptPassword = bcrypt.hashSync(newpassword, 10);
-    // const decoded = jwt.decode(resetLink, process.env.PASSWORD_RESET);
     const userid = verify.payload.id;
-    // console.log(userid);
     const user = await pool.query('SELECT * FROM public.pharmacy WHERE pharmacyid = $1', [
       userid,
     ]);

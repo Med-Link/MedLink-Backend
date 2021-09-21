@@ -133,7 +133,7 @@ exports.completeorder = async (req, res) => {
 
   // const paymentstatus = false;
   // const pharmacypaid = false;
-  const datetime = new Date();
+  const datetime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
 
   const pharmacy = await pool.query(
     'SELECT pharmacyid FROM order_medlist WHERE medlistid = $1', [

@@ -11,17 +11,28 @@ exports.sendorderbill = async (req, res) => {
     medlist,
 
   } = req.body;
-
+  // console.log(req)
   const acceptstatus = 0;
+  const datetime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+
   const token = req.headers.authorization.split(' ')[1];
   const decoded = jwt.decode(token, process.env.JWT_SECRET);
   const pharmacyid = decoded.payload.id;
 
   // eslint-disable-next-line no-plusplus
   try {
+    const status = 'accepted';
+    const acceptOrder = await pool.query(
+      'UPDATE public.order_req SET acceptstatus = $1 WHERE id = $2', [
+        status, orderreqid,
+      ],
+    );
+    if (!acceptOrder) {
+      res.status(400).send('accepting order error');
+    }
     const sendmedlist = await pool.query(
-      'INSERT INTO public.order_medlist( order_reqid, totalprice, pharmacyid, customerid, acceptstatus) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [orderreqid, totalprice, pharmacyid, customerid, acceptstatus],
+      'INSERT INTO public.order_medlist( order_reqid, totalprice, pharmacyid, customerid, acceptstatus, date) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [orderreqid, totalprice, pharmacyid, customerid, acceptstatus, datetime],
     );
     const { medlistid } = sendmedlist.rows[0];
     for (let i = 0; i < medlist.length; i++) {
@@ -115,4 +126,3 @@ exports.singleorderbill = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
-

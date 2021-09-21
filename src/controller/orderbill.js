@@ -113,9 +113,6 @@ exports.acceptedbills = async (req, res) => {
 };
 
 exports.rejectbills = async (req, res) => {
-  // const token = req.headers.authorization.split(' ')[1];
-  // const decoded = jwt.decode(token, process.env.JWT_SECRET);
-  // const customerid = decoded.payload.id;
   const {
     medlistid,
 
