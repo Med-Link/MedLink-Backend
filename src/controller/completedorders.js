@@ -142,6 +142,12 @@ exports.completeorder = async (req, res) => {
   );
   const { pharmacyid } = pharmacy.rows[0];
   try {
+    pool.query(
+      'DELETE FROM completedorder WHERE medlistid = $1', [
+        medlistid,
+      ],
+    );
+
     const checkoutorder = await pool.query(
       'INSERT INTO public.completedorder (medlistid, medlisttotal, deliverycost, servicecost, totalcost, paymentstatus, customerid, address, contactnumber, pharmacyid, pharmacypaid, date, shipped) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *',
       // eslint-disable-next-line max-len
@@ -159,29 +165,33 @@ exports.completeorder = async (req, res) => {
 };
 
 exports.checkout = async (req, res) => {
+  console.log(req.body);
   const {
     // eslint-disable-next-line camelcase
-    medlistid, status_code,
+    order_id, status_code,
   } = req.body;
+  console.log(order_id, status_code);
   // eslint-disable-next-line camelcase
   if (status_code === '2') {
     try {
       const update = await pool.query(
         'UPDATE completedorder SET paymentstatus = $1 WHERE medlistid = $2', [
-          true, medlistid,
+          true, order_id,
         ],
       );
       const details = await pool.query('SELECT * FROM public.completedorder WHERE paymentstatus = $1 AND medlistid = $2',
-        [true, medlistid]);
+        [true, order_id],
+      );
+      console.log(details);
       // if (update) {
       const reducestock = await pool.query(
         'UPDATE medicinebatch SET quantity=medicinebatch.quantity-list_items.quantity FROM list_items WHERE medicinebatch.batchid=list_items.batchid AND medlistid=$1', [
-          medlistid,
+          order_id,
         ],
       );
       const updatemedlist = await pool.query(
         'UPDATE order_medlist SET acceptstatus = $1 WHERE medlistid = $2', [
-          true, medlistid,
+          true, order_id,
         ],
       );
       if (!update) {
@@ -209,15 +219,16 @@ exports.checkout = async (req, res) => {
         text: 'Order delivery details are listed',
         html: `
         <h2>Order delivery details</h2>
-        <p> address :${details.address} </p> <p>contact number:  ${details.contactnumber} </p> <p>order number:  ${details.orderid} </p>`,
+        <p> address :${details.rows[0].address} </p> <p>contact number:  ${details.rows[0].contactnumber} </p> <p>order number:  ${details.rows[0].orderid} </p>`,
       };
 
       const sent = transporter.sendMail(mailOptions, (error) => {
         if (!sent) {
           return res.status(401).json(error);
         }
-        return 'order delivery email sent';
+        // return 'order delivery email sent';
       });
+      return res.status(200).send("payment successful ");
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
