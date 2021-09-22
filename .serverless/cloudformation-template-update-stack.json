@@ -161,7 +161,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/back-end/dev/1631984120578-2021-09-18T16:55:20.578Z/back-end.zip"
+          "S3Key": "serverless/back-end/dev/1632283294545-2021-09-22T04:01:34.545Z/back-end.zip"
         },
         "Handler": "src/index.server.js",
         "Runtime": "nodejs12.x",
@@ -179,14 +179,14 @@
         "RouteLogGroup"
       ]
     },
-    "RouteLambdaVersionZ52KFdtVUKZRjtpe9dE8Zi8nKTDEUQ6dynB7Tozc": {
+    "RouteLambdaVersion3S6YIP0MGKNdyfiCJIh539ClEeQhU4wlKLccGzZNPA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "RouteLambdaFunction"
         },
-        "CodeSha256": "dpBkkg20tTLxZFuJOFb8w2wmnhFD+JwzuEJDsIonzF8="
+        "CodeSha256": "2nmxhcj77G7bSi8CW6I18a34iIF+1xz5I8Fe/MCvDHI="
       }
     },
     "ApiGatewayRestApi": {
@@ -274,7 +274,7 @@
         "RouteLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1631984088254": {
+    "ApiGatewayDeployment1632283134777": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -336,7 +336,7 @@
     "RouteLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "RouteLambdaVersionZ52KFdtVUKZRjtpe9dE8Zi8nKTDEUQ6dynB7Tozc"
+        "Ref": "RouteLambdaVersion3S6YIP0MGKNdyfiCJIh539ClEeQhU4wlKLccGzZNPA"
       },
       "Export": {
         "Name": "sls-back-end-dev-RouteLambdaFunctionQualifiedArn"
