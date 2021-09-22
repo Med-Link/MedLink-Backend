@@ -165,12 +165,10 @@ exports.completeorder = async (req, res) => {
 };
 
 exports.checkout = async (req, res) => {
-  console.log(req.body);
   const {
     // eslint-disable-next-line camelcase
     order_id, status_code,
   } = req.body;
-  console.log(order_id, status_code);
   // eslint-disable-next-line camelcase
   if (status_code === '2') {
     try {
@@ -182,7 +180,6 @@ exports.checkout = async (req, res) => {
       const details = await pool.query('SELECT * FROM public.completedorder WHERE paymentstatus = $1 AND medlistid = $2',
         [true, order_id],
       );
-      console.log(details);
       // if (update) {
       const reducestock = await pool.query(
         'UPDATE medicinebatch SET quantity=medicinebatch.quantity-list_items.quantity FROM list_items WHERE medicinebatch.batchid=list_items.batchid AND medlistid=$1', [
@@ -228,7 +225,7 @@ exports.checkout = async (req, res) => {
         }
         // return 'order delivery email sent';
       });
-      return res.status(200).send("payment successful ");
+      return res.status(200).send('payment successful ');
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
