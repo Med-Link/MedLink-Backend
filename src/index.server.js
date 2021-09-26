@@ -36,7 +36,7 @@ const adminincomeRoutes = require('./routes/admin/income');
 
 
 env.config();
-app.use(cors());
+app.use(cors({ origin: true }));
 // already included in express package
 // can use express.json instead of body parser
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
