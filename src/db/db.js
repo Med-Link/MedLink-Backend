@@ -1,7 +1,6 @@
-// const knex = require('knex');
-// const knexfile = require('./knexfile');
-
-// const { Pool } = require('pg');
+const knex = require('knex');
+const { Pool } = require('pg');
+const knexfile = require('./knexfile');
 
 // const pool = new Pool({
 //   user: 'postgres',
@@ -11,5 +10,13 @@
 //   database: 'medlink',
 
 // });
-const pool = process.env.DATABASE_URL;
+const pool = new Pool({
+  user: 'aeeurajvblzrqz',
+  password: '186bdc04eead08fda182f5eafb5306df3112b2e2ac8388cd3afac47eb0d2ebbd',
+  host: 'localhost',
+  port: 5432,
+  database: 'dk5206v3k9k8o',
+
+});
+// const pool = process.env.DATABASE_URL;
 module.exports = pool;
