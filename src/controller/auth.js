@@ -69,7 +69,6 @@ exports.signup = async (req, res) => {
 // eslint-disable-next-line consistent-return
 exports.signin = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await pool.query('SELECT * FROM public.customers WHERE email = $1', [
       email,
